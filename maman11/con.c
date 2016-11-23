@@ -17,7 +17,7 @@ void contract(char s1[], char s2[]);
 void printArr(char arr[]);
 
 int main() {
-char s1[2] = {'a', '\0'}; //{'a','b', 'c', 'd', 'd', 'c', 'b', 'a', '\0'};
+char s1[10] =  {'a','b', 'c', 'k', 'e', 'f', 'g', 'h', '\0'};
 char s2[17] = {'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', '\0'};
 
 contract(s1, s2);
@@ -52,12 +52,10 @@ min = s1[i]; /* set the min */
 ++i; /* increment i so the max will be the next char after min */
 
 while(i < str_length) {	 /* do the while loop so long as the current char is not end of the string */
-printf("inside while in contract\n");
-
 	max = s1[i]; /* set the new max. essentially we need a new max with each iteration */
-	printf("max = %d\n", max);
-	if(min < max && (max - s1[i - 1] == INCREASED_BY_ONE)) {
-		printf("inside 1 if \n");
+
+	/* check if max is higher than min exactly by one */
+	if(max - s1[i - 1] == INCREASED_BY_ONE) {
 		++str; /* we increment str to signify increasing order with increments of 1 occured */
 		++i;
 	} else if(str == TWO_CHAR_STRING) { /* we have a string with increasing order but it's only 2 chars
