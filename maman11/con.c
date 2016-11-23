@@ -18,10 +18,10 @@ printArr(s2);
 return 0;
 }
 
-void contract(char s1[], char s2[]) {
 	
-/*	arguments: char s1[] - array with character string
-			   char s2[] - empty array
+/*				function contract:
+				arguments: char s1[] - array with character string
+			    char s2[] - empty array
 	return: void
 	description: the function receives 2 arrays. array s1 contains ASCII characters. The function shortens sequence(s) of
 	characters according to this format: "a-z" where 'a' is the char with the lowest lexigraphical value while 'z'
@@ -38,6 +38,7 @@ void contract(char s1[], char s2[]) {
 		5) the last case is when we have a descending lexigraphical order. then we immediately write the char to
 		s2 array. reset min. 
 */
+void contract(char s1[], char s2[]) {
 
 int min; /* the first ascii letter in the current string with increasing order */
 int max; /* the ascii char with the highest integer value in the current string with increasing order */

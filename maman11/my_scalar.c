@@ -1,6 +1,5 @@
 #include <stdio.h>
 #define RAND_ARRAY_SIZE 5 /*random integer to create the arrays for testing the funtion scalar_product*/
-
 int scalar_product(int arr1[], int arr2[], int length);
 /*
 arguments: int arr1[] - the first vector
