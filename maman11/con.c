@@ -9,12 +9,15 @@
 #define MIN_SEQUENCE 3
 #define TWO_STEPS 2
 #define INVALID 99
+#define ZEROETH 0
+#define FIRST 1
+#define INCREASED_BY_ONE 1
 
 void contract(char s1[], char s2[]);
-int isLegal(char c);
 void printArr(char arr[]);
 
 int main() {
+	char s0[1] = {'\0'};
 	char s1[4] = {1000,5000,45000,'\0'};
 	char s2[4] = {0};
 	char c = '\n';
@@ -32,7 +35,7 @@ int main() {
 
 		printf("-----while-----\n");
 printArr(s1);
-
+contract(s0, s2);
 
 /*
 	while( (c = getchar()) != EOF) {
@@ -48,6 +51,7 @@ printArr(s1);
 
 void contract(char s1[], char s2[]) {
 /*
+0. if the string is length 1 return the string
 1. convert char to int
 2. check that it's between 0 to 127
 3. init min/max
@@ -64,37 +68,40 @@ provided the lexicographical order is still increasing*/
 int i = 0; /*the index for traversing the s1 array*/
 int j = 0; /*the index for traversing the s2 array*/
 int str = 0; /*the length of the current sequence of chars of increasing order*/
+int str_length = strlen(s1); /* the length is s1 array */
+printf("the strlen = %d\n", str_length);
 
-min = s1[i];
-max = s1[i + 1];
+/* if the s1 string is only one char nothing needs to be done, just write the char to s2 */
+if(str_length == ONE_CHAR_STRING) {
+	s2[ZEROETH] = s1[ZEROETH];
+	return;
+}
 
+
+min = s1[i]; /**/
 do{
-	if(!isLegal(max)) {
-		if(!isLegal(min)) {
-			i += TWO_STEPS;
-			min = s1[i];
-			max = s1[i + 1];
-		}
+	
+	max = s1[i];
+
+
+	if(min < max && (max - s1[i - 1] == INCREASED_BY_ONE)) {
+		++str; /* we increment str to signify increasing order with increments of 1 occured */
+		++i;
+	} else if(str == TWO_CHAR_STRING) { /* we have a string with increasing order but it's only 2 chars
+	thus just write it to s2 array*/
+		s2[j] = min; /* write the first char from the string */
+		s2[++j] = max; /* write the second char from the string */
+		++j; /* increment j so that we have an empty slot in s2 array ready next time */
+		str = 0; /* we took care of the current string with increasing order. now reset the str to 0 for new count */
+		min = s1[i]; /* now we need a new min */
+	} else if(str > TWO_CHAR_STRING){
 		s2[j] = min;
-		++j;
-		++i;
-		min = s1[i];
-		max = s2[i + 1];
-	} else if(max > min && max < s1[i]) {
-		max = s1[i];
-		++str;
-		++i;
-	} else if(str >= MIN_SEQUENCE) {
-		s2[j] = '-';
-		s2[++j] = max;
-		++i;
-		++j;
-	} else {
-		s2[j] = max;
-		++i;
-		++j;
-	} /*end of big if*/
-} while(s1[i + 1] != '\0');
+		s2[++j] = '-';
+		s2[++j] = s1[i - 1];
+		++j; /* increment j so that we have an empty slot in s2 array ready next time */
+		min = max; /* now we need a new min */
+	} 
+} while(s1[i] != '\0');
 
 
 	
@@ -103,17 +110,6 @@ do{
 
 
 
-}
-
-int isLegal(char c) {
-	int result;
-	if(c < LOWER || c > HIGHER) {
-		printf("Illegal character!");
-		result = FALSE;
-	} else {
-		result = TRUE;
-	}
-	return result;
 }
 
 void printArr(char arr[]) {
