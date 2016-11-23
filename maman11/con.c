@@ -17,9 +17,10 @@ void contract(char s1[], char s2[]);
 void printArr(char arr[]);
 
 int main() {
-	char s0[1] = {'\0'};
-	char s1[4] = {1000,5000,45000,'\0'};
-	char s2[4] = {0};
+	/* char s0[1] = {'a', '\0'}; */
+
+	char s1[3] = {'a', 'b', '\0'};
+	char s2[3] = {0};
 	char c = '\n';
 	char uc;
 	char sc;
@@ -33,9 +34,12 @@ int main() {
 			printf("Illegal!");
 		}
 
-		printf("-----while-----\n");
-printArr(s1);
-contract(s0, s2);
+		
+
+contract(s1, s2);
+
+printf("-----after contract-----\n");
+printArr(s2);
 
 /*
 	while( (c = getchar()) != EOF) {
@@ -67,7 +71,7 @@ int max; /*the ascii char with the highest integer value,
 provided the lexicographical order is still increasing*/
 int i = 0; /*the index for traversing the s1 array*/
 int j = 0; /*the index for traversing the s2 array*/
-int str = 0; /*the length of the current sequence of chars of increasing order*/
+int str = 1; /*the length of the current sequence of chars of increasing order*/
 int str_length = strlen(s1); /* the length is s1 array */
 printf("the strlen = %d\n", str_length);
 
@@ -78,35 +82,45 @@ if(str_length == ONE_CHAR_STRING) {
 }
 
 
-min = s1[i]; /**/
-do{
-	
-	max = s1[i];
+min = s1[i]; /* set the min */
+++i; /* increment i so the max will be the next char after min */
 
+while(s1[i] != '\0') {	 /* do the while loop so long as the current char is not end of the string */
+printf("inside while in contract\n");
+
+	max = s1[i]; /* set the new max. essentially we need a new max with each iteration */
 
 	if(min < max && (max - s1[i - 1] == INCREASED_BY_ONE)) {
+		printf("inside 1 if \n");
 		++str; /* we increment str to signify increasing order with increments of 1 occured */
 		++i;
 	} else if(str == TWO_CHAR_STRING) { /* we have a string with increasing order but it's only 2 chars
 	thus just write it to s2 array*/
+		printf("inside 2 if \n");
 		s2[j] = min; /* write the first char from the string */
 		s2[++j] = max; /* write the second char from the string */
 		++j; /* increment j so that we have an empty slot in s2 array ready next time */
 		str = 0; /* we took care of the current string with increasing order. now reset the str to 0 for new count */
 		min = s1[i]; /* now we need a new min */
-	} else if(str > TWO_CHAR_STRING){
-		s2[j] = min;
-		s2[++j] = '-';
-		s2[++j] = s1[i - 1];
+		++i;
+	} else if(str > TWO_CHAR_STRING){ /* we have a string with increasing order it's 3 chars or more and we need to
+	make a contraction in this case */
+		printf("inside 3 if \n");
+		s2[j] = min; /* min is the starting value of the current str */
+		s2[++j] = '-'; /* insert a hyphen according to the format */
+		s2[++j] = s1[i - 1]; /* s1[i - 1] is the highest value of the current str */
 		++j; /* increment j so that we have an empty slot in s2 array ready next time */
 		min = max; /* now we need a new min */
-	} 
-} while(s1[i] != '\0');
-
-
-	
-
- /*end of while*/
+		++i;
+	} else if(str == 1 && (max - s1[i - 1] != INCREASED_BY_ONE)) { /* if a string with decreasing order occured
+	or the integer interval between chars is not equal to +1 */
+		printf("inside 4 if \n");
+		s2[j] = min;
+		++j;
+		min = max; /* now we need a new min */
+		++i;
+	}
+} /*end of while*/
 
 
 
