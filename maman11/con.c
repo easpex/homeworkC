@@ -17,40 +17,14 @@ void contract(char s1[], char s2[]);
 void printArr(char arr[]);
 
 int main() {
-	/* char s0[1] = {'a', '\0'}; */
+char s1[2] = {'a', '\0'}; //{'a','b', 'c', 'd', 'd', 'c', 'b', 'a', '\0'};
+char s2[17] = {'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', '\0'};
 
-	char s1[10] = {'a','b', 'a', 'b', 'c', '\0'};
-	char s2[17] = {'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', '\0'};
-	char c = '\n';
-	char uc;
-	char sc;
-	char mc;
-
-	uc = (unsigned char) c;
-		sc = (signed char) c;
-		mc = c - '0';
-		printf("c = %d | uc = %d | sc = %d | mc = %d\n", c, uc, sc, mc);
-		if(c < LOWER || c > HIGHER) {
-			printf("Illegal!");
-		}
-
-		
-printf("MAIN: strlen of s1 = %d | strlen of s2 = %d\n", strlen(s1), strlen(s2));
 contract(s1, s2);
 
-printf("-----after contract-----\n");
 printArr(s2);
 
-/*
-	while( (c = getchar()) != EOF) {
-		uc = (unsigned char) c;
-		sc = (signed char) c;
-		mc = c - '0';
-		printf("c = %d | uc = %d | sc = %d | mc = %d\n", c, uc, sc, mc);
-
-	}
-*/
-	return 0;
+return 0;
 }
 
 void contract(char s1[], char s2[]) {
@@ -66,21 +40,13 @@ void contract(char s1[], char s2[]) {
 		keep writing the same string to s2
 
 */
-int min; /*the first ascii letter in the string*/
-int max; /*the ascii char with the highest integer value, 
-provided the lexicographical order is still increasing*/
-int i = 0; /*the index for traversing the s1 array*/
-int j = 0; /*the index for traversing the s2 array*/
-int str = ONE_CHAR_STRING; /*the length of the current sequence of chars of increasing order*/
-int str_length = strlen(s1) + 1; /* the length is s1 array */
-printf("s1 strlen = %d\n", str_length);
-
-/* if the s1 string is only one char nothing needs to be done, just write the char to s2 */
-if(str_length == ONE_CHAR_STRING) {
-	s2[ZEROETH] = s1[ZEROETH];
-	return;
-}
-
+int min; /* the first ascii letter in the current string with increasing order */
+int max; /* the ascii char with the highest integer value in the current string with increasing order */
+int i = 0; /* the index for traversing the s1 array */
+int j = 0; /* the index for traversing the s2 array */
+int str = ONE_CHAR_STRING; /* the length of the current sequence of chars of increasing order. initiated to 1
+in the beginning */
+int str_length = strlen(s1) + 1; /* the "real" length is s1 array which counts '\0' as well */
 
 min = s1[i]; /* set the min */
 ++i; /* increment i so the max will be the next char after min */
@@ -124,14 +90,16 @@ printf("inside while in contract\n");
 	printf("the i inside while = %d | the j = %d | s2 len = %d\n", i, j, strlen(s2));
 } /*end of while*/
 
-printArr(s2);
+
 
 }
 
+/* helper function, prints a char array */
 void printArr(char arr[]) {
 	int i;
-	printf("array length = %d\n", strlen(arr));
-	for(i = 0; i < strlen(arr); ++i) {
+	int str_len = strlen(arr);
+
+	for(i = 0; i < str_len; ++i) {
 		printf("%c ", arr[i]);
 	}
 	printf("\n");
