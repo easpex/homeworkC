@@ -53,14 +53,12 @@ void contract(char s1[], char s2[]) {
 	int str_length = strlen(s1) + 1; /* the "real" length is s1 array which counts '\0' as well */
 
 	min = s1[i]; /* set the min */
-	++i; /* increment i so the max will be the next char after min */
 
-	while(i < str_length) {	 /* do the while loop so long as the current char is not end of the string */
+	while(++i < str_length) {	 /* do the while loop so long as the current char is not end of the string */
 		max = s1[i]; /* set the new max. essentially we need a new max with each iteration */
 
 		if(max - s1[i - 1] == INCREASED_BY_ONE) { /* check if max is higher than min exactly by one */
 			++str; /* we increment str to signify increasing order with increments of 1 occured */
-			++i;
 		} else if(str == TWO_CHAR_STRING) { /* we have a string with increasing order but it's only 2 chars long
 		thus just write it to s2 array*/
 			s2[j] = min; /* write the first char from the current string */
@@ -69,7 +67,6 @@ void contract(char s1[], char s2[]) {
 			str = ONE_CHAR_STRING; /* we took care of the current string with increasing order. 
 			now reset the str to 1 for new count */
 			min = s1[i]; /* now we need a new min */
-			++i;
 		} else if(str > TWO_CHAR_STRING){ /* we have a string with increasing order it's 3 chars or more and we need to
 		make a contraction in this case */
 			s2[j] = min; /* min is the starting value of the current string */
@@ -79,14 +76,12 @@ void contract(char s1[], char s2[]) {
 			str = ONE_CHAR_STRING; /* we took care of the current string with increasing order. 
 			now reset the str to 1 for new count */
 			min = max; /* now we need a new min */
-			++i;
 		} else if(str == ONE_CHAR_STRING && (max - s1[i - 1] != INCREASED_BY_ONE)) { /* if a string with decreasing
 		order occured. we know this because either str was never incremented or the integer interval between max
 		and the previous char to max is not 1 */
 			s2[j] = min; /* write the current char to s2 string */
 			s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
 			min = max; /* now we need a new min */
-			++i;
 		} /* end of if */
 	} /* end of while */
 } /* end of contract */
