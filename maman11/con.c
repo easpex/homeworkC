@@ -3,20 +3,24 @@
 #define TWO_CHAR_STRING 2
 #define ONE_CHAR_STRING 1
 #define INCREASED_BY_ONE 1
+#define MAX_ARRAY_SIZE 100
 
+/* function prototypes */
 void contract(char s1[], char s2[]);
 void printArr(char arr[]);
 
 int main() {
-char s1[10] =  {'a','b', 'c', 'k', 'e', 'f', 'g', 'h', '\0'};
-char s2[17] = {'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', '\0'};
 
-contract(s1, s2);
+	/* declare s1 and s2 arrays*/
+	char s1[MAX_ARRAY_SIZE] =  "abcdzdcbaaa1234";
+	char s2[MAX_ARRAY_SIZE];
 
-printArr(s2);
+	contract(s1, s2); /* use the contract function */
 
-return 0;
-}
+	printArr(s2); /* print the resulting s2 array */
+
+	return 0; /* if main finished as expected return 0 */
+} /* end of main */
 
 	
 /*				function contract:
@@ -40,60 +44,60 @@ return 0;
 */
 void contract(char s1[], char s2[]) {
 
-int min; /* the first ascii letter in the current string with increasing order */
-int max; /* the ascii char with the highest integer value in the current string with increasing order */
-int i = 0; /* the index for traversing the s1 array */
-int j = 0; /* the index for traversing the s2 array */
-int str = ONE_CHAR_STRING; /* the length of the current sequence of chars of increasing order. initiated to 1
-in the beginning */
-int str_length = strlen(s1) + 1; /* the "real" length is s1 array which counts '\0' as well */
+	int min; /* the first ascii letter in the current string with increasing order */
+	int max; /* the ascii char with the highest integer value in the current string with increasing order */
+	int i = 0; /* the index for traversing the s1 array */
+	int j = 0; /* the index for traversing the s2 array */
+	int str = ONE_CHAR_STRING; /* the length of the current sequence of chars of increasing order. initiated to 1
+	in the beginning */
+	int str_length = strlen(s1) + 1; /* the "real" length is s1 array which counts '\0' as well */
 
-min = s1[i]; /* set the min */
-++i; /* increment i so the max will be the next char after min */
+	min = s1[i]; /* set the min */
+	++i; /* increment i so the max will be the next char after min */
 
-while(i < str_length) {	 /* do the while loop so long as the current char is not end of the string */
-	max = s1[i]; /* set the new max. essentially we need a new max with each iteration */
+	while(i < str_length) {	 /* do the while loop so long as the current char is not end of the string */
+		max = s1[i]; /* set the new max. essentially we need a new max with each iteration */
 
-	if(max - s1[i - 1] == INCREASED_BY_ONE) { /* check if max is higher than min exactly by one */
-		++str; /* we increment str to signify increasing order with increments of 1 occured */
-		++i;
-	} else if(str == TWO_CHAR_STRING) { /* we have a string with increasing order but it's only 2 chars long
-	thus just write it to s2 array*/
-		s2[j] = min; /* write the first char from the current string */
-		s2[++j] = s1[i - 1]; /* write the second char from the current string */
-		s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
-		str = ONE_CHAR_STRING; /* we took care of the current string with increasing order. 
-		now reset the str to 1 for new count */
-		min = s1[i]; /* now we need a new min */
-		++i;
-	} else if(str > TWO_CHAR_STRING){ /* we have a string with increasing order it's 3 chars or more and we need to
-	make a contraction in this case */
-		s2[j] = min; /* min is the starting value of the current string */
-		s2[++j] = '-'; /* insert a hyphen according to the requested format */
-		s2[++j] = s1[i - 1]; /* s1[i - 1] is the highest value of the current str */
-		s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
-		str = ONE_CHAR_STRING; /* we took care of the current string with increasing order. 
-		now reset the str to 1 for new count */
-		min = max; /* now we need a new min */
-		++i;
-	} else if(str == ONE_CHAR_STRING && (max - s1[i - 1] != INCREASED_BY_ONE)) { /* if a string with decreasing
-	order occured. we know this because either str was never incremented or the integer interval between max
-	and the previous char to max is not 1 */
-		s2[j] = min; /* write the current char to s2 string */
-		s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
-		min = max; /* now we need a new min */
-		++i;
-	} /* end of if */
-} /* end of while */
+		if(max - s1[i - 1] == INCREASED_BY_ONE) { /* check if max is higher than min exactly by one */
+			++str; /* we increment str to signify increasing order with increments of 1 occured */
+			++i;
+		} else if(str == TWO_CHAR_STRING) { /* we have a string with increasing order but it's only 2 chars long
+		thus just write it to s2 array*/
+			s2[j] = min; /* write the first char from the current string */
+			s2[++j] = s1[i - 1]; /* write the second char from the current string */
+			s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
+			str = ONE_CHAR_STRING; /* we took care of the current string with increasing order. 
+			now reset the str to 1 for new count */
+			min = s1[i]; /* now we need a new min */
+			++i;
+		} else if(str > TWO_CHAR_STRING){ /* we have a string with increasing order it's 3 chars or more and we need to
+		make a contraction in this case */
+			s2[j] = min; /* min is the starting value of the current string */
+			s2[++j] = '-'; /* insert a hyphen according to the requested format */
+			s2[++j] = s1[i - 1]; /* s1[i - 1] is the highest value of the current str */
+			s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
+			str = ONE_CHAR_STRING; /* we took care of the current string with increasing order. 
+			now reset the str to 1 for new count */
+			min = max; /* now we need a new min */
+			++i;
+		} else if(str == ONE_CHAR_STRING && (max - s1[i - 1] != INCREASED_BY_ONE)) { /* if a string with decreasing
+		order occured. we know this because either str was never incremented or the integer interval between max
+		and the previous char to max is not 1 */
+			s2[j] = min; /* write the current char to s2 string */
+			s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
+			min = max; /* now we need a new min */
+			++i;
+		} /* end of if */
+	} /* end of while */
 } /* end of contract */
 
 /* helper function, prints a char array */
 void printArr(char arr[]) {
 	int i;
-	int str_len = strlen(arr);
+	int str_len = strlen(arr); /* this is the length of the argument array */
 
-	for(i = 0; i < str_len; ++i) {
+	for(i = 0; i < str_len; ++i) { /* we'll use the loop print each char */
 		printf("%c ", arr[i]);
 	}
-	printf("\n");
+	printf("\n"); /* once we finished with printing the array we'll add a newline */
 }

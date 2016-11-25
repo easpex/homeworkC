@@ -1,14 +1,7 @@
 #include <stdio.h>
 #define RAND_ARRAY_SIZE 5 /*random integer to create the arrays for testing the funtion scalar_product*/
+
 int scalar_product(int arr1[], int arr2[], int length);
-/*
-arguments: int arr1[] - the first vector
-		   int arr2[] - the second vector
-		   int length - the length of both vectors
-returns: int sum - the scalar product of the two vectors
-description: the function receives 2 arrays and their length and computes
-the scalar product via a for-loop
-*/
 
 int main() {
 	int i;
@@ -26,6 +19,14 @@ int main() {
 	return 0; /*if main finished correctly we return 0 */
 }
 
+/*
+arguments: int arr1[] - the first vector
+		   int arr2[] - the second vector
+		   int length - the length of both vectors
+returns: int sum - the scalar product of the two vectors
+description: the function receives 2 arrays and their length and computes
+the scalar product via a for-loop
+*/
 int scalar_product(int arr1[], int arr2[], int length) {
 	int i; /* iterator to traverse the arrays */
 	int sum = 0; /*sum of the individual products*/
