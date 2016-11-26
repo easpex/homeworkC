@@ -15,15 +15,15 @@ int main() {
 	}
 
 	result = scalar_product(arr1, arr2, RAND_ARRAY_SIZE);
-	printf("the product = %d\n", result); /* prints the result */
+	printf("the scalar product = %d\n", result); /* prints the result */
 	return 0; /*if main finished correctly we return 0 */
 }
 
-/*
+/* function scalar_product:
 arguments: int arr1[] - the first vector
 		   int arr2[] - the second vector
 		   int length - the length of both vectors
-returns: int sum - the scalar product of the two vectors
+return: int sum - the scalar product of the two vectors
 description: the function receives 2 arrays and their length and computes
 the scalar product via a for-loop
 */
@@ -38,4 +38,3 @@ int scalar_product(int arr1[], int arr2[], int length) {
 
 	return sum;
 }
-

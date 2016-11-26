@@ -5,19 +5,18 @@
 #define INCREASED_BY_ONE 1
 #define MAX_ARRAY_SIZE 100
 
-/* function prototypes */
+/* function prototype */
 void contract(char s1[], char s2[]);
-void printArr(char arr[]);
 
 int main() {
 
 	/* declare s1 and s2 arrays*/
-	char s1[MAX_ARRAY_SIZE] =  "abcdzdcbaaa1234";
+	char s1[MAX_ARRAY_SIZE] =  "abcdzdcbaaa1234xy";
 	char s2[MAX_ARRAY_SIZE];
 
 	contract(s1, s2); /* use the contract function */
 
-	printArr(s2); /* print the resulting s2 array */
+	printf("%s\n",s2); /* print the resulting s2 array */
 
 	return 0; /* if main finished as expected return 0 */
 } /* end of main */
@@ -25,8 +24,8 @@ int main() {
 	
 /*				function contract:
 				arguments: char s1[] - array with character string
-			    char s2[] - empty array
-	return: void
+			    		   char s2[] - empty array
+				return: void
 	description: the function receives 2 arrays. array s1 contains ASCII characters. The function shortens sequence(s) of
 	characters according to this format: "a-z" where 'a' is the char with the lowest lexigraphical value while 'z'
 	has the highest. if the string is only 2 chars long (increasing lexigraphical order) than we don't need the hyphen
@@ -55,6 +54,7 @@ void contract(char s1[], char s2[]) {
 	min = s1[i]; /* set the min */
 
 	while(++i < str_length) {	 /* do the while loop so long as the current char is not end of the string */
+
 		max = s1[i]; /* set the new max. essentially we need a new max with each iteration */
 
 		if(max - s1[i - 1] == INCREASED_BY_ONE) { /* check if max is higher than min exactly by one */
@@ -82,17 +82,8 @@ void contract(char s1[], char s2[]) {
 			s2[j] = min; /* write the current char to s2 string */
 			s2[++j] = '\0'; /* the last char in s2 needs to be '\0' to signify the end of the string */
 			min = max; /* now we need a new min */
+		} else {
+			printf("Error!");
 		} /* end of if */
 	} /* end of while */
 } /* end of contract */
-
-/* helper function, prints a char array */
-void printArr(char arr[]) {
-	int i;
-	int str_len = strlen(arr); /* this is the length of the argument array */
-
-	for(i = 0; i < str_len; ++i) { /* we'll use the loop print each char */
-		printf("%c ", arr[i]);
-	}
-	printf("\n"); /* once we finished with printing the array we'll add a newline */
-}
