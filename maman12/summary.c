@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #define MAX_ARR_SIZE 1000
 #define NUM_OF_ARRAYS 2
+#define SUMMARY_ARR_IND 1
+
 void printArray(int *p, int len);
 int * createIntArray(int *p, int len);
 
@@ -25,11 +27,22 @@ int main() {
 		}
 	}
 	
-
 	for(i = 0; i < array_len; ++i) {
 		scanf("%d", *p  + i);
 	}
 
+	*(*(p + SUMMARY_ARR_IND)) = **p;
+	
+	for(i = 1; i < array_len; ++i) {
+		(*(p + SUMMARY_ARR_IND))[i] = *(*p + i) + (*(p + SUMMARY_ARR_IND))[i - 1];
+	}
+	
+
+
+
+	printArray(*p, array_len);
+	printf("*(*(p + 0) + 0) = %d\n", *(*(p + 0) + 1));
+	printArray(*(p + SUMMARY_ARR_IND), array_len);
 	printArray(*p, array_len);
 	return 0;
 }
