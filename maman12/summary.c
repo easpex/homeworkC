@@ -19,7 +19,7 @@ int main() {
 	}
 
 	for(i = 0; i < NUM_OF_ARRAYS; ++i) {
-		if( !(p[i] = createIntArray(p[i], array_len)) ) {
+		if( !(*(p + i) = createIntArray(*(p + i), array_len)) ) {
 			printf("Memory allocation failed!\n");
 			exit(0);
 		}
@@ -27,10 +27,10 @@ int main() {
 	
 
 	for(i = 0; i < array_len; ++i) {
-		scanf("%d", p[0] + i);
+		scanf("%d", *p  + i);
 	}
 
-	printArray(p[0], array_len);
+	printArray(*p, array_len);
 	return 0;
 }
 
