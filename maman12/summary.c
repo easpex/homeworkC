@@ -28,7 +28,7 @@ int main() {
 
 	/* get the integers from user's input */
 	for(i = 0; i < array_len; ++i) {
-		scanf("%d", p  + i); /* we're using a pointer so incrementing by one for each new int */
+		scanf("%d", p + i); /* we're using a pointer so incrementing by one for each new int */
 	}
 
 	summary_array = summary(p, array_len); /* call summary function and receive the pointer to the summarized array */
@@ -36,11 +36,7 @@ int main() {
 	printf("\nThe summary array:\n");
 	printArray(summary_array, array_len); /* print the summarized array */
 
-
-	
-	
-
-	return 0;
+	return 0; /* finish the program */
 }
 
 /* summary function:
@@ -53,7 +49,7 @@ values whereas the integer at index i of the new array is the sum of all integer
 up to i. 
 */
 int * summary(int *p, int len) {
-	int *s = 0; /* the pointer for the summarized array */
+	int *s; /* the pointer for the summarized array */
 	int i; /* the iterator */
 
 	if( !(s = createIntArray(len)) ) { /* create the array */
@@ -61,11 +57,12 @@ int * summary(int *p, int len) {
 		exit(0); /* if there's not enough memory exit the program */
 	}
 
-	*s = *p; /* the first int in the summarized array is the exactly the same as in the received array */
+	*s = *p; /* the first int in the summarized array is the exactly the same as the first in
+	in the received array */
 	
 	for(i = 1; i < len; ++i) {
 		/* loop through the received array and each time any given int in the summarized array
-		is the sum of its corresponding int in the received array + previous int in the summarized arrays */
+		is the sum of its corresponding int in the received array + previous int in the summarized array */
 		*(s + i) = *(p + i) + *(s + i - 1); 
 	}
 	return s;
