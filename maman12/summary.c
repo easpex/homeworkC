@@ -4,11 +4,11 @@
 /* function prototypes */
 int * summary(int *p, int len);
 void printArray(int *p, int len);
-int * createIntArray(int *p, int len);
+int * createIntArray(int len);
 
 int main() {
 	int array_len; /* holds the array length */
-	int *p = 0; /* will point to the input array */
+	int *p; /* will point to the input array */
 	int i; /* iterator */
 	int * summary_array; /* will point to the array with summarized values */
 
@@ -19,7 +19,7 @@ int main() {
 	I decided to call exit() from main and not from inside createIntArray() because
 	philosophically it feels like main should control the flow and not one of the functions
 	it uses because theoretically there could be a backup scenario in main for such events */
-	if( !(p = createIntArray(p, array_len)) ) {
+	if( !(p = createIntArray(array_len)) ) {
 		printf("Memory allocation failed!\n");
 		exit(0); /* if there's not enough memory then exit the program */
 	}
@@ -56,7 +56,7 @@ int * summary(int *p, int len) {
 	int *s = 0; /* the pointer for the summarized array */
 	int i; /* the iterator */
 
-	if( !(s = createIntArray(s, len)) ) { /* create the array */
+	if( !(s = createIntArray(len)) ) { /* create the array */
 		printf("Memory allocation failed!\n");
 		exit(0); /* if there's not enough memory exit the program */
 	}
@@ -90,12 +90,15 @@ void printArray(int *p, int len) {
 
 /*
 createIntArray function:
-args: int * p - a pointer to an array 
+args: int len - the length of the array
+return: the pointer to the allocated memory or 0
+description: the function receives the length of array and uses malloc() to allocate the required memory.
+if malloc returns NULL then the function returns 0 
 */
-int * createIntArray(int *p, int len) {
-	p = (int *) malloc(len * sizeof(int));
-	if(!p) {
+int * createIntArray(int len) {
+	int *p = (int *) malloc(len * sizeof(int)); /* allocate memory */
+	if(!p) { /* if memory allocation failed return 0 */
 		return 0;
 	}
-	return p;
+	return p; /* return the pointer to the allocated memory */
 }
