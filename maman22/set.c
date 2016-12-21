@@ -95,20 +95,33 @@ int getCommand(char *line, char *commandp[], char *_set_array) {
 	return -1;
 }
 
-int getLine(char s[], int max) {
+int getSetName(char *pset, char *set_names) {
+	int i;
+	while(isspace(*pset)) { /* skip spaces */
+		pset++;
+	}
+
+	for(i = 0; i < strlen(set_names); i++) {
+		if(*pset == set_names[i])
+			return i;
+	}
+	return -1;
+}
+
+int getLine(char *s, int max) {
 	int c, i;
 	i = 0;
 
 	while(--max > 0 && (c = getchar()) != EOF && c != '\n') {
-		s[i++] = c;
+		*s++ = c;
 	}
 	if(c != '\n') {
 		printf("Exceeded max allowed input length");
 		return -1;
 	} else {
-		s[i++] = c;
+		*s++ = c;
 	}
-	s[i] = '\0';
+	*s = '\0';
 	return i;
 }
 
@@ -124,9 +137,9 @@ void ungetch(int c) {
 	}
 }
 
-void printCharArr(char s[]) {
+void printCharArr(char *s) {
 	int i;
-	for(i = 0; s[i] != '\0'; i++) {
-		printf("%c ", s[i]);
+	for(i = 0; *s != '\0'; s++) {
+		printf("%c ", *s);
 	}
 }
