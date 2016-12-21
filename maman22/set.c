@@ -49,7 +49,7 @@ void clearSet(set *s) {
 	} 
 }
 
-int getCommand(char *line, char *commandp[]) {
+int getCommand(char *line, char *commandp[], char *_set_array) {
 	int i;
 	int row; /* the row of the potential command in command_array */
 	int matchCount = 1; /* counts matches after each char read from user that is matched by command name */
@@ -70,17 +70,26 @@ int getCommand(char *line, char *commandp[]) {
 			the string. row is the corresponding row in the command_array */
 			for(i = 1; i < strlen(commandp[row]); i++) {
 				/* we'll start with i = 1 because the first letter had been matched by now */
-				if(*(line + i) == commandp[row][i]) {
+				if(*++line == commandp[row][i]) {
 					/* we increment matchCount each time 
 					the pointer to the given string and the pointer to the command name are equal
 					*/
 					matchCount++;
 				}
 			}
-			i = 0;
-			//while(i < strlen(_set_array) && )
+			/* if it's halt command that check if there's a space or newline after it */
+			if(row == HALT) {
+				++line; /* advance 1 char forward */
+				return (*line == ' ' || *line == '\n') ? row : -1;
+			}
+
+			/* check that the char immediately after the command name are "_set". after the loop 
+			i should be equal to 4 if "_set" goes after the command name */
+			for(i = 0; i < strlen(_set_array) && *++line == _set_array[i]; i++)
+				;
+
 			/* if the matchCount == the length of the string we have a match else return -1 */
-			return (matchCount == strlen(commandp[row])) ? row : -1;
+			return (matchCount == strlen(commandp[row]) && i == strlen(_set_array) && isspace(*++line)) ? row : -1;
 		}
 	}
 	return -1;
