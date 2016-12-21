@@ -1,23 +1,24 @@
 #include "set.h"
-set A;
-int main(int argc, char * argv[]) {
-	
-	set *pset = &A;
-	clearSet(pset);
+set A, B, C, D, E, F;
+int main() {
+	char command_array[COMMAND_ARR_ROW_LEN][COMMAND_ARR_COL_LEN] = {"sub", "halt", "read", "union", "print", "intersect"};
+	char _set_array[] = "_set";
+	char *commandp[COMMAND_ARR_ROW_LEN];
+	int i;
+	char line[MAX_LINE_LENGTH];
+	char *pline = line;
 
-	A.arr[4] = 4;
-	
-	pset -> arr[0] = 5;
-	pset -> arr[2] = 2;
 
-	printf("pset -> arr[0] = %d\n", pset -> arr[2]);
-	printf("A.arr[5] = %d\n", A.arr[0]);
+	for(i = 0; i < COMMAND_ARR_ROW_LEN; i++) {
+		commandp[i] = command_array[i];
+	}
 
-	printf("\n");
-	
-	printIntSet(pset);
+	printf("%d\n", getLine(line, MAX_LINE_LENGTH));
+	printf("commandp[i] = %c\n", commandp[2][0]);
+	printf("line = %d\n", line);
+	printf("%d\n", getCommand(line, commandp));
+	//printCharArr(line);
 
-	printBitSet(pset);
 	return 0;
 }
 
