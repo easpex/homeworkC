@@ -10,15 +10,18 @@ int main() {
 	char *pline = line;
 	char *pset = _set_array;
 
-
+	/* init commandp */
 	for(i = 0; i < COMMAND_ARR_ROW_LEN; i++) {
 		commandp[i] = command_array[i];
 	}
 
+
+	
+
 	printf("%d\n", getLine(pline, MAX_LINE_LENGTH));
 	printf("commandp[i] = %c\n", commandp[2][0]);
 	printf("line = %d\n", line);
-
+	printf("getNum = %d\n", getNum(line));
 	i = 1;
 			printf("%d\n", strlen(_set_array));
 

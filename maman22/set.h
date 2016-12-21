@@ -14,6 +14,10 @@
 #define INTERSECT 5
 #define COMMAND_ARR_ROW_LEN 6
 #define COMMAND_ARR_COL_LEN 9
+#define EOFLINE 0
+#define MAX_DIGITS 3
+#define HIGH_LIM 127
+#define LOW_LIM 0
 
 
 typedef struct set {
@@ -30,3 +34,5 @@ void printCharArr(char *s);
 void ungetch(int c);
 int getch(void);
 int getSetName(char *pset, char *set_names);
+int getNum(char *pline);
+int getNum(char *pline);

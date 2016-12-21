@@ -108,6 +108,80 @@ int getSetName(char *pset, char *set_names) {
 	return -1;
 }
 
+int getNum(char *pline) {
+	int digitCount = 0;
+	int num = 0;
+	while(isspace(*pline)) { /* skip spaces */
+		pline++;
+	}
+
+	/* numbers must be separated by commas*/
+	if(*pline == ',')
+		pline++;
+	else
+		return -1;
+
+	while(isspace(*pline)) { /* skip spaces */
+		pline++;
+	}
+
+	/* if we have a minus */
+	if(*pline == '-') {
+		/* if we got 1 after minus */
+		if(*++pline == '1') {
+			pline++; /* go to the next char */
+
+			while(isspace(*pline) && *pline != '\n')/* skip spaces */
+				pline++;
+				
+			/* if there're spaces after -1 or if there're not we'll return EOFLINE else there was
+			an illegal char after 1 so we return -1 */
+			return (*pline == '\n') ?  EOFLINE : -1;
+		} else {
+			return -1; /* we didn't get 1 after minus so the input is illegal */
+		}
+	}
+
+	while(isdigit(*pline) && digitCount <= MAX_DIGITS) {
+		num = 10 * num + (*pline - '0');
+		pline++;
+		digitCount++;
+	}
+	
+	if(digitCount == 0) { /* if digitCount was never incremented it means that we never got a number */
+		printf("Illegal character");
+		return -1;
+	  /* digitCount was incremented now we need to check if the next char after the number is legal */	
+	} else if(*pline == ',') {
+		if(num > HIGH_LIM) {
+			printf("%d is out of range", num);
+			return -1;
+		} else {
+			return num;
+		}
+	} /* end of case with comma */
+
+	 else if(isspace(*pline)){ /* now we check if the next char is a space */
+
+		while(isspace(*pline)) /* skip spaces */
+			pline++;
+
+		if(*pline == ',') { /* if it's a comma we just need to check the range */
+			if(num > HIGH_LIM) {
+				printf("%d is out of range", num);
+				return -1;
+			} else {
+				return num;
+			} /* end of case if the char is a comma */
+		} else {
+			printf("Illegal sequence"); /* if the char is not a comma or space then it's an illegal sequence */
+			return -1;
+		}
+	}
+	printf("Illegal character");
+	return -1;
+}
+
 int getLine(char *s, int max) {
 	int c, i;
 	i = 0;
