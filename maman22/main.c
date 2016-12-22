@@ -22,9 +22,13 @@ int main() {
 	current.pos = pline;
 	printf("current.pos\n");
 	printCharArr(current.pos);
-	setSetName(&current, set_names);
-	printStatus(current);
+	setCommand(line, commandp, _set_array, &current);
 	printCharArr(current.pos);
+	printStatus(current);
+
+	//setSetName(&current, set_names);
+	
+	printf("-----misc----");
 	test(&pline);
 	printf("test = %c\n", *pline);
 	printf("commandp[i] = %c\n", commandp[2][0]);
@@ -35,8 +39,6 @@ int main() {
 
 
 	printf("%d\n", getCommand(line, commandp, _set_array));
-	
-	printf("getSetName = %d\n", getSetName(&line[2], set_names)); 
 
 	return 0;
 }

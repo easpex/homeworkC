@@ -48,11 +48,11 @@ void clearSet(set *s) {
 	} 
 }
 
-int getCommand(char *line, char *commandp[], char *_set_array) {
+void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 	int i;
 	int row; /* the row of the potential command in command_array */
 	int matchCount = 1; /* counts matches after each char read from user that is matched by command name */
-
+	st -> state = -1; /* worst case scenario the state will be marked as illegal if we receive illegal input */
 	while(isspace(*line)) { /* skip spaces */
 		line++;
 	}
@@ -79,7 +79,9 @@ int getCommand(char *line, char *commandp[], char *_set_array) {
 			/* if it's halt command that check if there's a space or newline after it */
 			if(row == HALT) {
 				++line; /* advance 1 char forward */
-				return (*line == ' ' || *line == '\n') ? row : -1;
+				if(*line == ' ' || *line == '\n')
+					st -> command = HALT;
+					st -> state = 1;
 			}
 
 			/* check that the char immediately after the command name are "_set". after the loop 
@@ -88,28 +90,18 @@ int getCommand(char *line, char *commandp[], char *_set_array) {
 				;
 
 			/* if the matchCount == the length of the string we have a match else return -1 */
-			return (matchCount == strlen(commandp[row]) && i == strlen(_set_array) && isspace(*++line)) ? row : -1;
+			if(matchCount == strlen(commandp[row]) && i == strlen(_set_array) && isspace(*++line)) {
+				st -> command = row;
+				st -> state = 1;
+				st -> pos = line;
+			}
 		}
 	}
-	return -1;
-}
-
-int getSetName(char *pset, char *set_names) {
-	int i;
-	while(isspace(*pset)) { /* skip spaces */
-		pset++;
-	}
-
-	for(i = 0; i < strlen(set_names); i++) {
-		if(*pset == set_names[i])
-			return i;
-	}
-	return -1;
 }
 
 void setSetName(Status *st, char *set_names) {
 	int i;
-	st -> state = -1;
+	st -> state = -1; /* worst case scenario the state will be marked as illegal if we receive illegal input */
 	while(isspace(*(st -> pos))) { /* skip spaces */
 		st -> pos++;
 	}

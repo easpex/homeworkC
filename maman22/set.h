@@ -36,6 +36,7 @@ void printIntSet(set *s);
 void printBitSet(set *p);
 void clearSet(set *s);
 int getCommand(char *line, char *commandp[], char *_set_array);
+void setCommand(char *line, char *commandp[], char *_set_array, Status *st);
 int getLine(char *s, int max);
 void printCharArr(char *s);
 void ungetch(int c);
