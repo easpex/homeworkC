@@ -43,6 +43,9 @@ int main() {
 						curr_status.state == LEGAL) {
 						numToBit(setp, num);
 					}
+					if(curr_status.state != LEGAL)
+						clearSet(setp);
+
 					printBitSet(setp);
 				}
 				break;

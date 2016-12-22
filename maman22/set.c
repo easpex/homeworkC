@@ -215,35 +215,13 @@ int getNum(Status *st) {
 		printf("3Illegal sequence");
 		return -1;
 	  /* digitCount was incremented now we need to check if the next char after the number is legal */	
-	} else if(*st -> pos == ',') {
-		if(num > HIGH_LIM) {
-			printf("%d is out of range", num);
-			return -1;
-		} else {
-			st -> state = 1;
-			st -> pos++; /* increment the string position for next function */
-			return num;
-		}
-	} /* end of case with comma */
-
-	 else if(isspace(*st -> pos)){ /* now we check if the next char is a space */
-
-		while(isspace(*st -> pos)) /* skip spaces */
-			st -> pos++;
-
-		if(*st -> pos == ',') { /* if it's a comma we just need to check the range */
-			if(num > HIGH_LIM) {
-				printf("%d is out of range", num);
-				return -1;
-			} else {
-				st -> state = 1;
-				st -> pos++; /* increment the string position for next function */
-				return num;
-			} /* end of case if the char is a comma */
-		} else {
-			printf("4Illegal sequence"); /* if the char is not a comma or space then it's an illegal sequence */
-			return -1;
-		}
+	} else if(num > HIGH_LIM) {
+		printf("%d is out of range", num);
+		return -1;
+	} else {
+		st -> state = 1;
+		//st -> pos++; /* increment the string position for next function */
+		return num;
 	}
 	printf("5Illegal sequence");
 	return -1;
