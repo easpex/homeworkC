@@ -14,10 +14,13 @@
 #define INTERSECT 5
 #define COMMAND_ARR_ROW_LEN 6
 #define COMMAND_ARR_COL_LEN 9
-#define EOFLINE 0
+#define EOFLINE 1
 #define MAX_DIGITS 3
 #define HIGH_LIM 127
 #define LOW_LIM 0
+#define LEGAL 1
+#define ILLEGAL -1
+#define BIT_IN_CHAR 8
 
 
 typedef struct set {
@@ -41,8 +44,11 @@ int getLine(char *s, int max);
 void printCharArr(char *s);
 void ungetch(int c);
 int getch(void);
-//int getNum(char *pline);
 void test(char **p);
-void setSetName(Status *st, char *set_names);
-void printStatus(Status st);
+set * getSetName(Status *st, char *set_names);
+void printStatus(Status *st);
 int getNum(Status *st);
+void clearStatus(Status *st, char * line);
+void numToBit(set *s, int num);
+
+set A, B, C, D, E, F;

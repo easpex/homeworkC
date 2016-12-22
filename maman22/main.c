@@ -1,50 +1,67 @@
 #include "set.h"
-set A, B, C, D, E, F;
+
 int main() {
 	char command_array[COMMAND_ARR_ROW_LEN][COMMAND_ARR_COL_LEN] = {"sub", "halt", "read", "union", "print", "intersect"};
 	char _set_array[] = "_set";
 	char set_names[] = "ABCDEF";
 	char *commandp[COMMAND_ARR_ROW_LEN];
 	int i;
+	int num;
+	set *setp;
+
 	char line[MAX_LINE_LENGTH];
-	char *pline = line;
-	Status current;
-	Status *st = &current;
+	Status curr_status;
 
 	/* init commandp */
 	for(i = 0; i < COMMAND_ARR_ROW_LEN; i++) {
 		commandp[i] = command_array[i];
 	}
 
-	printf("%d\n", getLine(pline, MAX_LINE_LENGTH));
-	current.pos = pline;
+	while(getLine(line, MAX_LINE_LENGTH) > 0) {
+		clearStatus(&curr_status, line);
+		setCommand(line, commandp, _set_array, &curr_status);
 
-	//printf("!!*st -> pos = %c\n", ++(*st -> pos));
-	//printf("!!*st -> pos = %c\n", *st -> pos);
-	printf("current.pos\n");
-	printCharArr(current.pos);
+		if(curr_status.state != LEGAL) { /* check if the command is legal */
+			printf("\nNo such command\n");
+		}
 
-	printf("getNum = %d\n", getNum(&current));
+		switch(curr_status.command) {
+			case HALT:
+				printf("Exiting the program");
+				exit(0);
+				break;
+			case READ:
+				printf("\ninside read\n");
+				//clearStatus(&curr_status, curr_status.pos);
+				setp = getSetName(&curr_status, set_names);
+				if(curr_status.state != LEGAL) {
+					printf("\nNo such set\n");
+				} else {
+					clearSet(setp); /* make sure the the set is clean and empty (we need all bits equal 0 */
+					while(curr_status.endOfLine != EOFLINE &&
+						(num = getNum(&curr_status)) != ILLEGAL &&
+						curr_status.state == LEGAL) {
+						numToBit(setp, num);
+					}
+					printBitSet(setp);
+				}
+				break;
+			default:
+				printf("\ninside default\n");
+				break;
+		}
+
+		// setp = &A;
+		// clearSet(setp);
+		// numToBit(setp, 5);
+		
+		// getSetName(&curr_status, set_names);
+		printf("\n");
+		printStatus(&curr_status);
+		printf("\n");
 
 
-	//setCommand(line, commandp, _set_array, &current);
-	//setSetName(&current, set_names);
-	
-	printCharArr(current.pos);
-	printStatus(current);
-
-	
-	
-	printf("-----misc----");
-	test(&pline);
-	printf("test = %c\n", *pline);
-	printf("commandp[i] = %c\n", commandp[2][0]);
-	
-	i = 1;
-			printf("%d\n", (int) strlen(_set_array));
-
-
-
+	}
 	
 
 	return 0;
