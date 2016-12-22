@@ -24,6 +24,11 @@ typedef struct set {
 	char arr[ARR_LEN];
 } set;
 
+typedef struct Status {
+	int state;
+	char * pos;
+} Status;
+
 void print_binary(int n);
 void printIntSet(set *s);
 void printBitSet(set *p);
@@ -36,3 +41,4 @@ int getch(void);
 int getSetName(char *pset, char *set_names);
 int getNum(char *pline);
 int getNum(char *pline);
+int test(char **p);

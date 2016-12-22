@@ -6,8 +6,7 @@ int bufpos = 0;
 /*
 (ARR_LEN - 1 == i) ? "\n" : " ")
 */
-char haltState = 0;
-char haltCount = 0;
+
 
 void print_binary(int number)
 {
@@ -216,4 +215,11 @@ void printCharArr(char *s) {
 	for(i = 0; *s != '\0'; s++) {
 		printf("%c ", *s);
 	}
+}
+
+int test(char **p) {
+	int i;
+
+	for(i = 0; i < 3; i++, (*p)++)
+		;
 }
