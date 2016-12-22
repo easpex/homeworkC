@@ -107,6 +107,22 @@ int getSetName(char *pset, char *set_names) {
 	return -1;
 }
 
+void setSetName(Status *st, char *set_names) {
+	int i;
+	st -> state = -1;
+	while(isspace(*(st -> pos))) { /* skip spaces */
+		st -> pos++;
+	}
+
+	for(i = 0; i < strlen(set_names); i++) {
+		if(*(st -> pos) == set_names[i]) {
+			st -> setName = *(st -> pos);
+			st -> state = 1;
+		}
+	}
+	st -> pos++; /* increment the char position so the next function starts analyzing the next char */
+}
+
 int getNum(char *pline) {
 	int digitCount = 0;
 	int num = 0;
@@ -217,9 +233,16 @@ void printCharArr(char *s) {
 	}
 }
 
-int test(char **p) {
+void test(char **p) {
 	int i;
 
 	for(i = 0; i < 3; i++, (*p)++)
 		;
+}
+
+void printStatus(Status st) {
+	printf("state = %d\n", st.state);
+	printf("command = %d\n", st.command);
+	printf("setName = %c\n", st.setName);
+	printf("pos = %c\n", *(st.pos));
 }

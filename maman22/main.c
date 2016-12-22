@@ -22,7 +22,9 @@ int main() {
 	current.pos = pline;
 	printf("current.pos\n");
 	printCharArr(current.pos);
-	printf("current.pos\n");
+	setSetName(&current, set_names);
+	printStatus(current);
+	printCharArr(current.pos);
 	test(&pline);
 	printf("test = %c\n", *pline);
 	printf("commandp[i] = %c\n", commandp[2][0]);

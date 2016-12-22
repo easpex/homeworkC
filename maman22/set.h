@@ -26,6 +26,8 @@ typedef struct set {
 
 typedef struct Status {
 	int state;
+	int command;
+	char setName;
 	char * pos;
 } Status;
 
@@ -41,4 +43,6 @@ int getch(void);
 int getSetName(char *pset, char *set_names);
 int getNum(char *pline);
 int getNum(char *pline);
-int test(char **p);
+void test(char **p);
+void setSetName(Status *st, char *set_names);
+void printStatus(Status st);
