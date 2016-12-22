@@ -89,7 +89,12 @@ void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 			for(i = 0; i < strlen(_set_array) && *++line == _set_array[i]; i++)
 				;
 
-			/* if the matchCount == the length of the string we have a match else return -1 */
+			/* if the matchCount == the length of the "_set" and i was incremented to "_set" length
+			and the next char in string is a space, then all of the criteria for matching
+			command name are satisfied so we:
+			-set the command
+			-set the state to 1
+			-set the line position for next function */
 			if(matchCount == strlen(commandp[row]) && i == strlen(_set_array) && isspace(*++line)) {
 				st -> command = row;
 				st -> state = 1;
@@ -102,82 +107,96 @@ void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 void setSetName(Status *st, char *set_names) {
 	int i;
 	st -> state = -1; /* worst case scenario the state will be marked as illegal if we receive illegal input */
-	while(isspace(*(st -> pos))) { /* skip spaces */
+	while(isspace(*st -> pos)) { /* skip spaces */
 		st -> pos++;
 	}
 
 	for(i = 0; i < strlen(set_names); i++) {
-		if(*(st -> pos) == set_names[i]) {
-			st -> setName = *(st -> pos);
+		if(*st -> pos == set_names[i]) {
+			st -> setName = *st -> pos;
 			st -> state = 1;
 		}
 	}
 	st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 }
 
-int getNum(char *pline) {
+int getNum(Status *st) {
+	/* assumes that there's a preceding comma (maybe after spaces)
+	and there's a comma after the number */
 	int digitCount = 0;
 	int num = 0;
-	while(isspace(*pline)) { /* skip spaces */
-		pline++;
+	st -> state = -1;
+	while(isspace(*st -> pos)) { /* skip spaces */
+		st -> pos++;
 	}
 
 	/* numbers must be separated by commas*/
-	if(*pline == ',')
-		pline++;
-	else
+	if(*st -> pos == ',')
+		st -> pos++;
+	else {
+		printf("Illegal sequence");
 		return -1;
+	}
 
-	while(isspace(*pline)) { /* skip spaces */
-		pline++;
+	while(isspace(*st -> pos)) { /* skip spaces */
+		st -> pos++;
 	}
 
 	/* if we have a minus */
-	if(*pline == '-') {
-		/* if we got 1 after minus */
-		if(*++pline == '1') {
-			pline++; /* go to the next char */
+	if(*st -> pos == '-') {
+		st -> pos++; /* increment the string once so we can check if the next char is '1' */
+		if(*(st -> pos) == '1') {
+			st -> pos++; /* go to the next char */
 
-			while(isspace(*pline) && *pline != '\n')/* skip spaces */
-				pline++;
+			while(isspace(*st -> pos) && *st -> pos != '\n')/* skip spaces */
+				st -> pos++;
 				
 			/* if there're spaces after -1 or if there're not we'll return EOFLINE else there was
 			an illegal char after 1 so we return -1 */
-			return (*pline == '\n') ?  EOFLINE : -1;
+			if(*st -> pos == '\n'){
+				st -> state = 1;
+				st -> endOfLine = 1;
+				return -1;
+			}
 		} else {
+			printf("Illegal sequence");
 			return -1; /* we didn't get 1 after minus so the input is illegal */
 		}
 	}
 
-	while(isdigit(*pline) && digitCount <= MAX_DIGITS) {
-		num = 10 * num + (*pline - '0');
-		pline++;
+	while(isdigit(*st -> pos) && digitCount <= MAX_DIGITS) {
+		num = 10 * num + (*(st -> pos) - '0');
+		st -> pos++;
 		digitCount++;
 	}
 	
 	if(digitCount == 0) { /* if digitCount was never incremented it means that we never got a number */
-		printf("Illegal character");
+		printf("Illegal sequence");
 		return -1;
 	  /* digitCount was incremented now we need to check if the next char after the number is legal */	
-	} else if(*pline == ',') {
+	} else if(*st -> pos == ',') {
 		if(num > HIGH_LIM) {
 			printf("%d is out of range", num);
 			return -1;
 		} else {
+			st -> state = 1;
+			st -> pos++; /* increment the string position for next function */
 			return num;
 		}
 	} /* end of case with comma */
 
-	 else if(isspace(*pline)){ /* now we check if the next char is a space */
+	 else if(isspace(*st -> pos)){ /* now we check if the next char is a space */
 
-		while(isspace(*pline)) /* skip spaces */
-			pline++;
+		while(isspace(*st -> pos)) /* skip spaces */
+			st -> pos++;
 
-		if(*pline == ',') { /* if it's a comma we just need to check the range */
+		if(*st -> pos == ',') { /* if it's a comma we just need to check the range */
 			if(num > HIGH_LIM) {
 				printf("%d is out of range", num);
 				return -1;
 			} else {
+				st -> state = 1;
+				st -> pos++; /* increment the string position for next function */
 				return num;
 			} /* end of case if the char is a comma */
 		} else {
@@ -185,9 +204,10 @@ int getNum(char *pline) {
 			return -1;
 		}
 	}
-	printf("Illegal character");
+	printf("Illegal sequence");
 	return -1;
 }
+
 
 int getLine(char *s, int max) {
 	int c, i;
@@ -234,6 +254,7 @@ void test(char **p) {
 
 void printStatus(Status st) {
 	printf("state = %d\n", st.state);
+	printf("endOfLine = %d\n", st.endOfLine);
 	printf("command = %d\n", st.command);
 	printf("setName = %c\n", st.setName);
 	printf("pos = %c\n", *(st.pos));

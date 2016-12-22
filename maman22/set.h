@@ -26,6 +26,7 @@ typedef struct set {
 
 typedef struct Status {
 	int state;
+	int endOfLine;
 	int command;
 	char setName;
 	char * pos;
@@ -35,15 +36,13 @@ void print_binary(int n);
 void printIntSet(set *s);
 void printBitSet(set *p);
 void clearSet(set *s);
-int getCommand(char *line, char *commandp[], char *_set_array);
 void setCommand(char *line, char *commandp[], char *_set_array, Status *st);
 int getLine(char *s, int max);
 void printCharArr(char *s);
 void ungetch(int c);
 int getch(void);
-int getSetName(char *pset, char *set_names);
-int getNum(char *pline);
-int getNum(char *pline);
+//int getNum(char *pline);
 void test(char **p);
 void setSetName(Status *st, char *set_names);
 void printStatus(Status st);
+int getNum(Status *st);
