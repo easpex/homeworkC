@@ -31,7 +31,7 @@ void printBitSet(set *p) {
 
 	for(i = 0; i < ARR_LEN; i++) {
 		printf("i = %d:  ", i);
-		for(pos = 0; pos < 8; pos++) {
+		for(pos = 0; pos < BIT_IN_CHAR; pos++) {
 			if( ( (p -> arr[i]) & (1 << pos)) != 0)
 				printf("1");
 			else
@@ -41,7 +41,7 @@ void printBitSet(set *p) {
 	}
 }
 
-void clearSet(set *s) {
+void clearBits(set *s) {
 	int i;
 	for(i = 0; i < ARR_LEN; i++) {
 		s -> arr[i] = 0;
@@ -165,11 +165,9 @@ int getNum(Status *st) {
 	int digitCount = 0;
 	int num = 0;
 	st -> state = -1;
-	printf("getNum start pos = %d\n", *st -> pos);
 	while(isspace(*st -> pos)) { /* skip spaces */
 		st -> pos++;
 	}
-	printf("getNum after space pos = %d\n", *st -> pos);
 
 	/* numbers must be separated by commas*/
 	if(*st -> pos == ',')
@@ -207,7 +205,7 @@ int getNum(Status *st) {
 
 	while(isdigit(*st -> pos) && digitCount <= MAX_DIGITS) {
 		num = 10 * num + (*(st -> pos) - '0');
-		st -> pos++;
+		st -> pos++; /* increment the string position for next function */
 		digitCount++;
 	}
 	
@@ -220,7 +218,6 @@ int getNum(Status *st) {
 		return -1;
 	} else {
 		st -> state = 1;
-		//st -> pos++; /* increment the string position for next function */
 		return num;
 	}
 	printf("5Illegal sequence");
@@ -276,11 +273,10 @@ void printStatus(Status *st) {
 	printf("endOfLine = %d\n", st -> endOfLine);
 	printf("command = %d\n", st -> command);
 	printf("setName = %c\n", st -> setName);
-	printf("pos = %c\n", *st -> pos);
+	printf("pos = %d\n", *st -> pos);
 }
 
 void clearStatus(Status *st, char * line) {
-	//st -> state = -1;
 	st -> endOfLine = 0;
 	st -> command = -1;
 	st -> setName = 0;
@@ -291,4 +287,68 @@ void numToBit(set *s, int num) {
 	int array_pos = num / BIT_IN_CHAR; /* determine the byte we need */
 	int bit_pos = num % BIT_IN_CHAR; /* determine the bit we need */
 	s -> arr[array_pos] ^= (-1 ^ s -> arr[array_pos]) & (1 << bit_pos); /* turn on the required bit */
+}
+
+void printSet(set *p) {
+	int bitpos; /* the position of a bit in a byte */
+	int memberCount = 0;
+	int i;
+	int numToPrint;
+
+	for(i = 0; i < ARR_LEN; i++) {
+		/* traverse all the 16 bytes of set.arr */
+		for(bitpos = 0; bitpos < BIT_IN_CHAR; bitpos++) {
+			if( ( (p -> arr[i]) & (1 << bitpos)) != 0) {
+				numToPrint = (i * BIT_IN_CHAR) + bitpos;
+				/* if the bit is 1 then print it's position in the array.
+				in order to calculate its position in the array:
+				i - is the byte
+				bitpos is the position inside the byte */
+				memberCount++;
+				
+				if(memberCount % NUMS_PER_LINE == 1)
+					printf("\n");
+			
+				if(numToPrint < DOUBLE_DIGIT) {
+					printf("%d%d ", 0, numToPrint);
+				} else {
+					printf("%d ", numToPrint);
+				}
+			}
+		}
+	}
+	printf("\n");
+}
+
+void setInitToZero() {
+	A.init = 0;
+	B.init = 0;
+	C.init = 0;
+	D.init = 0;
+	E.init = 0;
+	F.init = 0;
+}
+
+void advanceComma(Status *st) {
+	while(isspace(*st -> pos)) { /* skip spaces */
+		st -> pos++;
+	}
+	/* if the char is comma then it's legal input, increment the current position in the string
+	else the state is illegal */
+	if(*st -> pos == ',') {
+		st -> state = 1;
+		st -> pos++;
+	} else {
+		st -> state = -1;	
+	}
+}
+
+void checkRestOfLine(Status *st) {
+	st -> state = -1;
+	while(isspace(*st -> pos) && *st -> pos != '\n') { /* skip spaces */
+		st -> pos++;
+	}
+
+	if(*st -> pos == '\n')
+		st -> state = 1;
 }

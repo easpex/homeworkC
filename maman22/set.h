@@ -21,10 +21,13 @@
 #define LEGAL 1
 #define ILLEGAL -1
 #define BIT_IN_CHAR 8
-
+#define DOUBLE_DIGIT 10
+#define NUMS_PER_LINE 16
+#define SET_ARR_LEN 3
 
 typedef struct set {
 	char arr[ARR_LEN];
+	char init;
 } set;
 
 typedef struct Status {
@@ -38,7 +41,7 @@ typedef struct Status {
 void print_binary(int n);
 void printIntSet(set *s);
 void printBitSet(set *p);
-void clearSet(set *s);
+void clearBits(set *s);
 void setCommand(char *line, char *commandp[], char *_set_array, Status *st);
 int getLine(char *s, int max);
 void printCharArr(char *s);
@@ -50,5 +53,9 @@ void printStatus(Status *st);
 int getNum(Status *st);
 void clearStatus(Status *st, char * line);
 void numToBit(set *s, int num);
+void printSet(set *p);
+void setInitToZero();
+void advanceComma(Status *st);
+void checkRestOfLine(Status *st);
 
 set A, B, C, D, E, F;
