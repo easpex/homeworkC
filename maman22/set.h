@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define ARR_LEN 16
+#define CHAR_ARR_LEN 16
 #define MAX_LINE_LENGTH 1000
 #define BUFFER_SIZE 100
 #define SUB 0
@@ -25,8 +25,9 @@
 #define NUMS_PER_LINE 16
 #define SET_ARR_LEN 3
 
+
 typedef struct set {
-	char arr[ARR_LEN];
+	char arr[CHAR_ARR_LEN];
 	char init;
 } set;
 

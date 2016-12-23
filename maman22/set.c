@@ -4,7 +4,7 @@ char buffer[BUFFER_SIZE];
 int bufpos = 0;
 
 /*
-(ARR_LEN - 1 == i) ? "\n" : " ")
+(CHAR_ARR_LEN - 1 == i) ? "\n" : " ")
 */
 
 
@@ -19,7 +19,7 @@ void print_binary(int number)
 void printIntSet(set *s) {
 	int i;
 
-	for(i = 0; i < ARR_LEN; i++) {
+	for(i = 0; i < CHAR_ARR_LEN; i++) {
 		printf("%c", s -> arr[i]);
 	}
 	printf("\n");
@@ -29,7 +29,7 @@ void printBitSet(set *p) {
 	int pos;
 	int i;
 
-	for(i = 0; i < ARR_LEN; i++) {
+	for(i = 0; i < CHAR_ARR_LEN; i++) {
 		printf("i = %d:  ", i);
 		for(pos = 0; pos < BIT_IN_CHAR; pos++) {
 			if( ( (p -> arr[i]) & (1 << pos)) != 0)
@@ -43,7 +43,7 @@ void printBitSet(set *p) {
 
 void clearBits(set *s) {
 	int i;
-	for(i = 0; i < ARR_LEN; i++) {
+	for(i = 0; i < CHAR_ARR_LEN; i++) {
 		s -> arr[i] = 0;
 	} 
 }
@@ -295,7 +295,7 @@ void printSet(set *p) {
 	int i;
 	int numToPrint;
 
-	for(i = 0; i < ARR_LEN; i++) {
+	for(i = 0; i < CHAR_ARR_LEN; i++) {
 		/* traverse all the 16 bytes of set.arr */
 		for(bitpos = 0; bitpos < BIT_IN_CHAR; bitpos++) {
 			if( ( (p -> arr[i]) & (1 << bitpos)) != 0) {

@@ -9,6 +9,7 @@ int main() {
 	int num;
 	set *setp;
 	set *sets[SET_ARR_LEN];
+	set *left, *right, *endSet;
 
 
 	char line[MAX_LINE_LENGTH];
@@ -64,35 +65,69 @@ int main() {
 				} else if(curr_status.state != LEGAL) {
 					printf("\nNo such set\n");
 				} else {
-					printSet(setp);
+					checkRestOfLine(&curr_status);
+					if(curr_status.state != LEGAL) {
+						printf("Illegal sequence");
+					} else {
+						printSet(setp);
+					}
 				}
 				break;
 			case UNION:
+				/* we need to get the 3 sets which is the required number of arguments
+				that UNION needs to receive */
 				for(i = 0; i < SET_ARR_LEN && curr_status.state == LEGAL; i++) {
-					sets[i] = getSetName(&curr_status, set_names);
+					sets[i] = getSetName(&curr_status, set_names); /* get the set */
 
-					if(curr_status.state != LEGAL)
+					if(curr_status.state != LEGAL) /* if the state is not legal, the character that the user put 
+					is not a valid set name */
 						printf("No such set");
 
-					if(sets[i] -> init == 0) {
+					/* we need to check that the first 2 sets were initialized (the last one doesn't have to be
+					initialized  */
+					if(i < SET_ARR_LEN - 1 && sets[i] -> init == 0) {
 						curr_status.state = ILLEGAL;
 						printf("\nThe set was not initialized\n");
 					}
 					printf("set %d = %c\n", i, curr_status.setName);
 
+					/* we'll use advanceComma() to make sure the set names are separated by commas 
+					and/or spaces */
 					if(i < SET_ARR_LEN - 1 && curr_status.state == LEGAL)
 						advanceComma(&curr_status);
 				}
 
-					if(curr_status.state == LEGAL){
-						checkRestOfLine(&curr_status);
+				if(curr_status.state == LEGAL){ /* if after advanceComma() the state is legal then we need
+				to check if the rest of the line is legal. The only legal characters in the rest of the line
+				can be spaces and newline */
+					checkRestOfLine(&curr_status);
 
-						if(curr_status.state != LEGAL)
-							printf("Illegal sequence");
+					if(curr_status.state != LEGAL) {
+						/* if the rest of the line was illegal */
+						printf("Illegal sequence");
+					} else {
+						/* after all the checks we should've received 2 initialized, legal sets and one initialized
+						or not. we'll use new pointers left/right/endSet because we better understand the function of 
+						each one from its name */
+						left = sets[0];
+						right = sets[1];
+						endSet = sets[2];
+						endSet -> init = 1; /* we need to turn on init field for the endSet otherwise print_set
+						will not print it */
+
+						/* we need to loop through the arr field of the first 2 sets and save the result in the
+						endSet. using bitwise operator | will allow copy all "1"s from both sets */
+						for(i = 0; i < CHAR_ARR_LEN; i++) {
+							endSet -> arr[i] = left -> arr[i] | right -> arr[i];
+						}
 					}
-					
-				
+				}
+				break;
+			case INTERSECT:
 
+
+
+				
 				break;
 			default:
 				printf("\ninside default\n");
