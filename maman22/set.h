@@ -58,5 +58,6 @@ void printSet(set *p);
 void setInitToZero();
 void advanceComma(Status *st);
 void checkRestOfLine(Status *st);
+set ** processSetNames(Status curr_status, char * set_names, set * sets[]);
 
 set A, B, C, D, E, F;

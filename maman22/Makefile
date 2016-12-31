@@ -1,4 +1,4 @@
-CFLAGS = -c -Wall -pedantic -ansi
+CFLAGS = -c -g -Wall -pedantic -ansi
 
 all: set_prog
 

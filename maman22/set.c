@@ -227,17 +227,27 @@ int getNum(Status *st) {
 
 int getLine(char *s, int max) {
 	char *p = s; /* we will use p to count string length */
+	char prev = 0;
 	int c;
 
 	while(--max > 0 && (c = getchar()) != EOF && c != '\n') {
 		*s++ = c;
+		prev = c;
 	}
+
+	/* if the only input was a newline */
+	if(c == '\n' && prev == 0) {
+		printf("\nPlease enter input\n");
+		return 0;
+	}
+
 	if(c != '\n') {
 		printf("Exceeded max allowed input length");
 		return -1;
 	} else {
 		*s++ = c;
 	}
+
 	*s = '\0';
 	return s - p - 1;
 }
@@ -351,4 +361,54 @@ void checkRestOfLine(Status *st) {
 
 	if(*st -> pos == '\n')
 		st -> state = 1;
+}
+
+set ** processSetNames(Status curr_status, char * set_names, set * sets[]) {
+	int i;
+	/* we need to get the 3 sets which is the required number of arguments
+				that UNION needs to receive */
+
+	for(i = 0; i < SET_ARR_LEN && curr_status.state == LEGAL; i++) {
+		printf("start of processSetNames loop i = %d\n", i);
+		sets[i] = getSetName(&curr_status, set_names); /* get the set */
+
+		if(curr_status.state != LEGAL) { /* if the state is not legal, the character that the user put 
+		is not a valid set name */
+			printf("No such set");
+		}
+
+		/* we need to check that the first 2 sets were initialized (the last one doesn't have to be
+		initialized  */
+		if(i < SET_ARR_LEN - 1 && sets[i] -> init == 0) {
+			curr_status.state = ILLEGAL;
+			printf("\n1The set was not initialized - i = %d\n", i);
+		}
+		//printf("set %d = %c\n", i, curr_status.setName);
+
+		/* we'll use advanceComma() to make sure the set names are separated by commas 
+		and/or spaces */
+		printf("inside advanceComma\n");
+		if(i < SET_ARR_LEN - 1 && curr_status.state == LEGAL) {
+			printf("inside advanceComma");
+			advanceComma(&curr_status);
+		}
+		printf("enf of processSetNames loop i = %d\n", i);
+	}
+	printf("curr_status.state  = %d | i = %d\n", curr_status.state == LEGAL, i);
+	if(curr_status.state == LEGAL){ /* if after advanceComma() the state is legal then we need
+	to check if the rest of the line is legal. The only legal characters in the rest of the line
+	can be spaces and newline */
+		printf("if curr_status.state == LEGAL inside\n");
+		checkRestOfLine(&curr_status);
+
+		if(curr_status.state != LEGAL) {
+			printf("Illegal sequence");  /* if the rest of the line was illegal */
+			return NULL;
+		} else {
+			return sets;
+		}
+	} else {
+		printf("before return"); 
+		return NULL;
+	}
 }

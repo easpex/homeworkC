@@ -10,6 +10,7 @@ int main() {
 	set *setp;
 	set *sets[SET_ARR_LEN];
 	set *left, *right, *endSet;
+	set **receiver;
 
 
 	char line[MAX_LINE_LENGTH];
@@ -22,7 +23,7 @@ int main() {
 		commandp[i] = command_array[i];
 	}
 
-	while(getLine(line, MAX_LINE_LENGTH) > 0) {
+	while(getLine(line, MAX_LINE_LENGTH) >= 0) {
 		clearStatus(&curr_status, line);
 		setCommand(line, commandp, _set_array, &curr_status);
 
@@ -124,10 +125,22 @@ int main() {
 				}
 				break;
 			case INTERSECT:
+				receiver = processSetNames(curr_status, set_names, sets);
 
-
-
+				if(*receiver != NULL) {
+					left = sets[0];
+					right = sets[1];
+					endSet = sets[2];
+					endSet -> init = 1; /* we need to turn on init field for the endSet otherwise print_set
+					will not print it */
+					for(i = 0; i < CHAR_ARR_LEN; i++) {
+						endSet -> arr[i] = left -> arr[i] & right -> arr[i];
+					}
+				}
 				
+
+	
+
 				break;
 			default:
 				printf("\ninside default\n");

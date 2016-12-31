@@ -1,0 +1,4 @@
+read_set C, 1,2,3,56,  123,  -1   
+read_set   B  , 1,2  ,3  , 4, 55  ,9,-1
+intersect_set  A  ,  B  ,  C 
+print_set   C  
