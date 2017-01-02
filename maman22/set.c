@@ -241,6 +241,11 @@ int getLine(char *s, int max) {
 		return 0;
 	}
 
+	if(c == EOF) {
+		printf("\nReached end of file\n");
+		return -1;
+	}
+
 	if(c != '\n') {
 		printf("Exceeded max allowed input length");
 		return -1;
@@ -363,7 +368,7 @@ void checkRestOfLine(Status *st) {
 		st -> state = 1;
 }
 
-set ** processSetNames(Status curr_status, char * set_names, set * sets[]) {
+int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 	int i;
 	/* we need to get the 3 sets which is the required number of arguments
 				that UNION needs to receive */
@@ -375,15 +380,17 @@ set ** processSetNames(Status curr_status, char * set_names, set * sets[]) {
 		if(curr_status.state != LEGAL) { /* if the state is not legal, the character that the user put 
 		is not a valid set name */
 			printf("No such set");
+			return 0;
 		}
 
 		/* we need to check that the first 2 sets were initialized (the last one doesn't have to be
 		initialized  */
 		if(i < SET_ARR_LEN - 1 && sets[i] -> init == 0) {
 			curr_status.state = ILLEGAL;
-			printf("\n1The set was not initialized - i = %d\n", i);
+			printf("\n1The set %c was not initialized - i = %d\n", curr_status.setName, i);
+			return 0;
 		}
-		//printf("set %d = %c\n", i, curr_status.setName);
+		/* printf("set %d = %c\n", i, curr_status.setName); */
 
 		/* we'll use advanceComma() to make sure the set names are separated by commas 
 		and/or spaces */
@@ -403,12 +410,17 @@ set ** processSetNames(Status curr_status, char * set_names, set * sets[]) {
 
 		if(curr_status.state != LEGAL) {
 			printf("Illegal sequence");  /* if the rest of the line was illegal */
-			return NULL;
+			return 0;
 		} else {
-			return sets;
+			return 1;
 		}
-	} else {
-		printf("before return"); 
-		return NULL;
+	}
+	return 0;
+}
+
+void printString(char *s) {
+	while(*s != '\0') {
+		printf("c = %c | d = %d\n", *s, *s);
+		s++;
 	}
 }

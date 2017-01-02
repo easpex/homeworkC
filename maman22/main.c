@@ -10,9 +10,6 @@ int main() {
 	set *setp;
 	set *sets[SET_ARR_LEN];
 	set *left, *right, *endSet;
-	set **receiver;
-
-
 	char line[MAX_LINE_LENGTH];
 	Status curr_status;
 
@@ -52,7 +49,7 @@ int main() {
 						clearBits(setp);
 					} else {
 						 setp -> init = 1; /* if the state is legal activate the set so other commands know
-						//that the set is initiliazed*/
+						that the set is initiliazed*/
 						printf("*setp -> init = %c|%d\n", setp -> init, setp -> init);
 					}
 					printBitSet(setp);
@@ -61,10 +58,10 @@ int main() {
 			case PRINT:
 				printf("\ninside print\n");
 				setp = getSetName(&curr_status, set_names);
-				if(setp -> init == 0) {
-					printf("\nThe set was not initialized\n");
-				} else if(curr_status.state != LEGAL) {
+				if(curr_status.state != LEGAL) {
 					printf("\nNo such set\n");
+				} else if(setp -> init == 0) { 
+					printf("\nThe set %c was not initialized\n", curr_status.setName);					
 				} else {
 					checkRestOfLine(&curr_status);
 					if(curr_status.state != LEGAL) {
@@ -125,14 +122,17 @@ int main() {
 				}
 				break;
 			case INTERSECT:
-				receiver = processSetNames(curr_status, set_names, sets);
+				
+				printf("inside intersect\n");
 
-				if(*receiver != NULL) {
+				if(processSetNames(curr_status, set_names, sets)) {
 					left = sets[0];
 					right = sets[1];
 					endSet = sets[2];
-					endSet -> init = 1; /* we need to turn on init field for the endSet otherwise print_set
+					 /* we need to turn on init field for the endSet otherwise print_set
 					will not print it */
+					endSet -> init = 1;
+
 					for(i = 0; i < CHAR_ARR_LEN; i++) {
 						endSet -> arr[i] = left -> arr[i] & right -> arr[i];
 					}
@@ -148,10 +148,10 @@ int main() {
 		}
 
 		
-		// clearSet(setp);
-		// numToBit(setp, 5);
+		/* clearSet(setp); */
+		/* numToBit(setp, 5); */
 		
-		// getSetName(&curr_status, set_names);
+		/* getSetName(&curr_status, set_names); */
 		printf("\n");
 		printStatus(&curr_status);
 		printf("\n");
