@@ -1,4 +1,4 @@
-read_set Q, 1,2,3,56,  123,  -1   
+read_set A, 1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,56,  123,  -1   
 read_set   B  , 1,2  ,3  , 4, 55  ,9,-1
-intersect_set  K  ,  B  ,  C 
+intersect_set  A  ,  A  ,  A 
 print_set   A  

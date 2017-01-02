@@ -370,13 +370,14 @@ void checkRestOfLine(Status *st) {
 
 int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 	int i;
+	int setCount = 0;
 	/* we need to get the 3 sets which is the required number of arguments
 				that UNION needs to receive */
 
 	for(i = 0; i < SET_ARR_LEN && curr_status.state == LEGAL; i++) {
 		printf("start of processSetNames loop i = %d\n", i);
 		sets[i] = getSetName(&curr_status, set_names); /* get the set */
-
+		printf("state = %d\n", curr_status.state);
 		if(curr_status.state != LEGAL) { /* if the state is not legal, the character that the user put 
 		is not a valid set name */
 			printf("No such set");
@@ -400,7 +401,9 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 			advanceComma(&curr_status);
 		}
 		printf("enf of processSetNames loop i = %d\n", i);
+		setCount++;
 	}
+
 	printf("curr_status.state  = %d | i = %d\n", curr_status.state == LEGAL, i);
 	if(curr_status.state == LEGAL){ /* if after advanceComma() the state is legal then we need
 	to check if the rest of the line is legal. The only legal characters in the rest of the line
@@ -415,6 +418,12 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 			return 1;
 		}
 	}
+
+	if(setCount < SET_ARR_LEN) {
+		printf("Less than 3 sets were entered");
+		return 0;
+	}
+
 	return 0;
 }
 
