@@ -1,13 +1,5 @@
 #include "set.h"
 
-char buffer[BUFFER_SIZE];
-int bufpos = 0;
-
-/*
-(CHAR_ARR_LEN - 1 == i) ? "\n" : " ")
-*/
-
-
 void print_binary(int number)
 {
     if (number) {
@@ -54,7 +46,7 @@ void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 	int i;
 	int row; /* the row of the potential command in command_array */
 	int matchCount = 1; /* counts matches after each char read from user that is matched by command name */
-	st -> state = -1; /* worst case scenario the state will be marked as illegal if we receive illegal input */
+	st -> state = ILLEGAL; /* worst case scenario the state will be marked as illegal if we receive illegal input */
 	while(isspace(*line)) { /* skip spaces */
 		line++;
 	}
@@ -83,7 +75,7 @@ void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 				++line; /* advance 1 char forward */
 				if(*line == ' ' || *line == '\n')
 					st -> command = HALT;
-					st -> state = 1;
+					st -> state = LEGAL;
 			}
 
 			/* check that the char immediately after the command name are "_set". after the loop 
@@ -98,7 +90,7 @@ void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 			-set the line position for next function */
 			if(matchCount == strlen(commandp[row]) && i == strlen(_set_array) && isspace(*++line)) {
 				st -> command = row;
-				st -> state = 1;
+				st -> state = LEGAL;
 				st -> pos = line;
 			}
 		}
@@ -108,7 +100,7 @@ void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 set *getSetName(Status *st, char *set_names) {
 	/* assumes there may be spaces before, sets st-> pos to the next char after set name if the input is legal */
 	int i;
-	st -> state = -1; /* worst case scenario the state will be marked as illegal if we receive illegal input */
+	st -> state = ILLEGAL; /* worst case scenario the state will be marked as illegal if we receive illegal input */
 	while(isspace(*st -> pos)) { /* skip spaces */
 		st -> pos++;
 	}
@@ -117,37 +109,37 @@ set *getSetName(Status *st, char *set_names) {
 		switch(*st -> pos) {
 			case 'A':
 				st -> setName = *st -> pos;
-				st -> state = 1;
+				st -> state = LEGAL;
 				st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 				return &A;
 				break;
 			case 'B':
 				st -> setName = *st -> pos;
-				st -> state = 1;
+				st -> state = LEGAL;
 				st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 				return &B;
 				break;
 			case 'C':
 				st -> setName = *st -> pos;
-				st -> state = 1;
+				st -> state = LEGAL;
 				st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 				return &C;
 				break;
 			case 'D':
 				st -> setName = *st -> pos;
-				st -> state = 1;
+				st -> state = LEGAL;
 				st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 				return &D;
 				break;
 			case 'E':
 				st -> setName = *st -> pos;
-				st -> state = 1;
+				st -> state = LEGAL;
 				st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 				return &E;
 				break;
 			case 'F':
 				st -> setName = *st -> pos;
-				st -> state = 1;
+				st -> state = LEGAL;
 				st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 				return &F;
 				break;
@@ -155,7 +147,8 @@ set *getSetName(Status *st, char *set_names) {
 				break;
 		} /* end of swtitch */
 	} /* end of for loop */
-		return &A; /* return dummy set. main will still check for legal state */
+		printf("No such set from getSetName()");
+		return NULL; /* return dummy set. main will still check for legal state */
 	
 } /* end of getSetName function */
 
@@ -164,7 +157,7 @@ int getNum(Status *st) {
 	and there's a comma after the number */
 	int digitCount = 0;
 	int num = 0;
-	st -> state = -1;
+	st -> state = ILLEGAL;
 	while(isspace(*st -> pos)) { /* skip spaces */
 		st -> pos++;
 	}
@@ -173,8 +166,8 @@ int getNum(Status *st) {
 	if(*st -> pos == ',')
 		st -> pos++;
 	else {
-		printf("1Illegal sequence");
-		return -1;
+		printIllegalSequence();
+		return ILLEGAL;
 	}
 
 	while(isspace(*st -> pos)) { /* skip spaces */
@@ -187,19 +180,23 @@ int getNum(Status *st) {
 		if(*(st -> pos) == '1') {
 			st -> pos++; /* go to the next char */
 
-			while(isspace(*st -> pos) && *st -> pos != '\n')/* skip spaces */
+			while(*st -> pos == ' ' && *st -> pos != '\n') {/* skip spaces */
 				st -> pos++;
+			}
 				
 			/* if there're spaces after -1 or if there're not we'll return EOFLINE else there was
 			an illegal char after 1 so we return -1 */
 			if(*st -> pos == '\n'){
-				st -> state = 1;
-				st -> endOfLine = 1;
-				return -1;
+				st -> state = LEGAL;
+				st -> endOfLine = ON;
+				return ILLEGAL;
+			} else {
+				printIllegalSequence();
+				return ILLEGAL;
 			}
 		} else {
-			printf("2Illegal sequence");
-			return -1; /* we didn't get 1 after minus so the input is illegal */
+			printIllegalSequence();
+			return ILLEGAL; /* we didn't get 1 after minus so the input is illegal */
 		}
 	}
 
@@ -209,19 +206,19 @@ int getNum(Status *st) {
 		digitCount++;
 	}
 	
-	if(digitCount == 0) { /* if digitCount was never incremented it means that we never got a number */
-		printf("3Illegal sequence");
-		return -1;
+	if(!digitCount) { /* if digitCount was never incremented it means that we never got a number */
+		printIllegalSequence();
+		return ILLEGAL;
 	  /* digitCount was incremented now we need to check if the next char after the number is legal */	
 	} else if(num > HIGH_LIM) {
 		printf("%d is out of range", num);
-		return -1;
+		return ILLEGAL;
 	} else {
-		st -> state = 1;
+		st -> state = LEGAL;
 		return num;
 	}
-	printf("5Illegal sequence");
-	return -1;
+	printIllegalSequence();
+	return ILLEGAL;
 }
 
 
@@ -243,12 +240,13 @@ int getLine(char *s, int max) {
 
 	if(c == EOF) {
 		printf("\nReached end of file\n");
-		return -1;
+		*s = '\0';
+		return ILLEGAL;
 	}
 
 	if(c != '\n') {
 		printf("Exceeded max allowed input length");
-		return -1;
+		return ILLEGAL;
 	} else {
 		*s++ = c;
 	}
@@ -292,9 +290,9 @@ void printStatus(Status *st) {
 }
 
 void clearStatus(Status *st, char * line) {
-	st -> endOfLine = 0;
-	st -> command = -1;
-	st -> setName = 0;
+	st -> endOfLine = OFF;
+	st -> command = ILLEGAL;
+	st -> setName = OFF;
 	st -> pos = line;
 }
 
@@ -336,12 +334,12 @@ void printSet(set *p) {
 }
 
 void setInitToZero() {
-	A.init = 0;
-	B.init = 0;
-	C.init = 0;
-	D.init = 0;
-	E.init = 0;
-	F.init = 0;
+	A.init = OFF;
+	B.init = OFF;
+	C.init = OFF;
+	D.init = OFF;
+	E.init = OFF;
+	F.init = OFF;
 }
 
 void advanceComma(Status *st) {
@@ -351,26 +349,29 @@ void advanceComma(Status *st) {
 	/* if the char is comma then it's legal input, increment the current position in the string
 	else the state is illegal */
 	if(*st -> pos == ',') {
-		st -> state = 1;
+		st -> state = LEGAL;
 		st -> pos++;
 	} else {
-		st -> state = -1;	
+		printIllegalSequence();
+		st -> state = ILLEGAL;	
 	}
 }
 
 void checkRestOfLine(Status *st) {
-	st -> state = -1;
+	st -> state = ILLEGAL;
 	while(isspace(*st -> pos) && *st -> pos != '\n') { /* skip spaces */
 		st -> pos++;
 	}
 
-	if(*st -> pos == '\n')
-		st -> state = 1;
+	if(*st -> pos == '\n') {
+		st -> state = LEGAL;
+	} else {
+		printIllegalSequence();
+	}
 }
 
 int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 	int i;
-	int setCount = 0;
 	/* we need to get the 3 sets which is the required number of arguments
 				that UNION needs to receive */
 
@@ -380,7 +381,6 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 		printf("state = %d\n", curr_status.state);
 		if(curr_status.state != LEGAL) { /* if the state is not legal, the character that the user put 
 		is not a valid set name */
-			printf("No such set");
 			return 0;
 		}
 
@@ -397,14 +397,13 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 		and/or spaces */
 		printf("inside advanceComma\n");
 		if(i < SET_ARR_LEN - 1 && curr_status.state == LEGAL) {
-			printf("inside advanceComma");
+			printf("inside advanceComma\n");
 			advanceComma(&curr_status);
 		}
-		printf("enf of processSetNames loop i = %d\n", i);
-		setCount++;
-	}
+		printf("end of processSetNames loop i = %d\n", i);
+	} /* end of for loop */
 
-	printf("curr_status.state  = %d | i = %d\n", curr_status.state == LEGAL, i);
+	printf("curr_status.state  = %d | i = %d\n", curr_status.state, i);
 	if(curr_status.state == LEGAL){ /* if after advanceComma() the state is legal then we need
 	to check if the rest of the line is legal. The only legal characters in the rest of the line
 	can be spaces and newline */
@@ -412,18 +411,12 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 		checkRestOfLine(&curr_status);
 
 		if(curr_status.state != LEGAL) {
-			printf("Illegal sequence");  /* if the rest of the line was illegal */
+		 /* if the rest of the line was illegal */
 			return 0;
 		} else {
-			return 1;
+			return LEGAL;
 		}
 	}
-
-	if(setCount < SET_ARR_LEN) {
-		printf("Less than 3 sets were entered");
-		return 0;
-	}
-
 	return 0;
 }
 
@@ -432,4 +425,8 @@ void printString(char *s) {
 		printf("c = %c | d = %d\n", *s, *s);
 		s++;
 	}
+}
+
+void printIllegalSequence() {
+	printf("\nIllegal sequence!\n");
 }

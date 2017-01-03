@@ -24,6 +24,11 @@
 #define DOUBLE_DIGIT 10
 #define NUMS_PER_LINE 16
 #define SET_ARR_LEN 3
+#define ON 1
+#define OFF 0
+#define FIRST 0
+#define SECOND 1
+#define LAST 2
 
 
 typedef struct set {
@@ -60,5 +65,6 @@ void advanceComma(Status *st);
 void checkRestOfLine(Status *st);
 int processSetNames(Status curr_status, char * set_names, set * sets[]);
 void printString(char *s);
+void printIllegalSequence();
 
 set A, B, C, D, E, F;
