@@ -1,38 +1,5 @@
 #include "set.h"
 
-void print_binary(int number)
-{
-    if (number) {
-        print_binary(number >> 1);
-        putchar((number & 1) ? '1' : '0');
-    }
-}
-
-void printIntSet(set *s) {
-	int i;
-
-	for(i = 0; i < CHAR_ARR_LEN; i++) {
-		printf("%c", s -> arr[i]);
-	}
-	printf("\n");
-}
-
-void printBitSet(set *p) {
-	int pos;
-	int i;
-
-	for(i = 0; i < CHAR_ARR_LEN; i++) {
-		printf("i = %d:  ", i);
-		for(pos = 0; pos < BIT_IN_CHAR; pos++) {
-			if( ( (p -> arr[i]) & (1 << pos)) != 0)
-				printf("1");
-			else
-				printf("0");
-		}
-		printf("\n");
-	}
-}
-
 void clearBits(set *s) {
 	int i;
 	for(i = 0; i < CHAR_ARR_LEN; i++) {
@@ -147,7 +114,7 @@ set *getSetName(Status *st, char *set_names) {
 				break;
 		} /* end of swtitch */
 	} /* end of for loop */
-		printf("No such set from getSetName()");
+		printf("\nNo such set\n");
 		return NULL; /* return dummy set. main will still check for legal state */
 	
 } /* end of getSetName function */
@@ -211,7 +178,7 @@ int getNum(Status *st) {
 		return ILLEGAL;
 	  /* digitCount was incremented now we need to check if the next char after the number is legal */	
 	} else if(num > HIGH_LIM) {
-		printf("%d is out of range", num);
+		printf("\n%d is out of range\n", num);
 		return ILLEGAL;
 	} else {
 		st -> state = LEGAL;
@@ -234,18 +201,17 @@ int getLine(char *s, int max) {
 
 	/* if the only input was a newline */
 	if(c == '\n' && prev == 0) {
-		printf("\nPlease enter input\n");
 		return 0;
 	}
 
 	if(c == EOF) {
-		printf("\nReached end of file\n");
+		printf("\nReached the end of file\n");
 		*s = '\0';
 		return ILLEGAL;
 	}
 
 	if(c != '\n') {
-		printf("Exceeded max allowed input length");
+		printf("\nExceeded max allowed input length\n");
 		return ILLEGAL;
 	} else {
 		*s++ = c;
@@ -253,40 +219,6 @@ int getLine(char *s, int max) {
 
 	*s = '\0';
 	return s - p - 1;
-}
-
-int getch(void) {
-	return (bufpos > 0) ? buffer[--bufpos] : getchar();
-}
-
-void ungetch(int c) {
-	if(bufpos >= BUFFER_SIZE) {
-		printf("Too many characters\n");
-	} else {
-		buffer[bufpos++] = c;
-	}
-}
-
-void printCharArr(char *s) {
-	int i;
-	for(i = 0; *s != '\0'; s++) {
-		printf("%c ", *s);
-	}
-}
-
-void test(char **p) {
-	int i;
-
-	for(i = 0; i < 3; i++, (*p)++)
-		;
-}
-
-void printStatus(Status *st) {
-	printf("state = %d\n", st -> state);
-	printf("endOfLine = %d\n", st -> endOfLine);
-	printf("command = %d\n", st -> command);
-	printf("setName = %c\n", st -> setName);
-	printf("pos = %d\n", *st -> pos);
 }
 
 void clearStatus(Status *st, char * line) {
@@ -376,9 +308,7 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 				that UNION needs to receive */
 
 	for(i = 0; i < SET_ARR_LEN && curr_status.state == LEGAL; i++) {
-		printf("start of processSetNames loop i = %d\n", i);
 		sets[i] = getSetName(&curr_status, set_names); /* get the set */
-		printf("state = %d\n", curr_status.state);
 		if(curr_status.state != LEGAL) { /* if the state is not legal, the character that the user put 
 		is not a valid set name */
 			return 0;
@@ -395,19 +325,14 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 
 		/* we'll use advanceComma() to make sure the set names are separated by commas 
 		and/or spaces */
-		printf("inside advanceComma\n");
 		if(i < SET_ARR_LEN - 1 && curr_status.state == LEGAL) {
-			printf("inside advanceComma\n");
 			advanceComma(&curr_status);
 		}
-		printf("end of processSetNames loop i = %d\n", i);
 	} /* end of for loop */
 
-	printf("curr_status.state  = %d | i = %d\n", curr_status.state, i);
 	if(curr_status.state == LEGAL){ /* if after advanceComma() the state is legal then we need
 	to check if the rest of the line is legal. The only legal characters in the rest of the line
 	can be spaces and newline */
-		printf("if curr_status.state == LEGAL inside\n");
 		checkRestOfLine(&curr_status);
 
 		if(curr_status.state != LEGAL) {
@@ -418,13 +343,6 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 		}
 	}
 	return 0;
-}
-
-void printString(char *s) {
-	while(*s != '\0') {
-		printf("c = %c | d = %d\n", *s, *s);
-		s++;
-	}
 }
 
 void printIllegalSequence() {

@@ -30,7 +30,6 @@ int main() {
 				exit(0);
 				break;
 			case READ:
-				printf("\ninside read\n");
 				setp = getSetName(&curr_status, set_names);
 				if(curr_status.state == LEGAL) {
 					clearBits(setp); /* make sure the the set is clean and empty (we need all bits equal to 0 */
@@ -44,13 +43,10 @@ int main() {
 					} else {
 						 setp -> init = ON; /* if the state is legal activate the set so other commands know
 						that the set is initiliazed*/
-						printf("*setp -> init = %c|%d\n", setp -> init, setp -> init);
 					}
-					printBitSet(setp);
 				}
 				break;
 			case PRINT:
-				printf("\ninside print\n");
 				setp = getSetName(&curr_status, set_names);
 				if(curr_status.state == LEGAL) {
 					checkRestOfLine(&curr_status);
@@ -65,10 +61,7 @@ int main() {
 				}
 				break;
 			case UNION:
-				printf("inside union\n");
-
 				if(processSetNames(curr_status, set_names, sets)) {
-					printf("processSetNames == 1\n");
 					left = sets[FIRST];
 					right = sets[SECOND];
 					endSet = sets[LAST];
@@ -82,9 +75,6 @@ int main() {
 				}
 				break;
 			case INTERSECT:
-				
-				printf("inside intersect\n");
-
 				if(processSetNames(curr_status, set_names, sets)) {
 					left = sets[FIRST];
 					right = sets[SECOND];
@@ -99,7 +89,6 @@ int main() {
 				}
 				break;
 			case SUB:
-				printf("inside sub_set\n");
 				if(processSetNames(curr_status, set_names, sets)) {
 					left = sets[FIRST];
 					right = sets[SECOND];
@@ -114,13 +103,8 @@ int main() {
 				}
 				break;
 			default:
-				printf("\ninside default\n");
 				printf("\nNo such command\n");
 		} /* end of switch */
-
-		printf("\n");
-		printStatus(&curr_status);
-		printf("\n");
 	} /* end of while */
 	return 0;
 } /* end of main */

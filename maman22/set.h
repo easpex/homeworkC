@@ -44,18 +44,10 @@ typedef struct Status {
 	char * pos;
 } Status;
 
-void print_binary(int n);
-void printIntSet(set *s);
-void printBitSet(set *p);
 void clearBits(set *s);
 void setCommand(char *line, char *commandp[], char *_set_array, Status *st);
 int getLine(char *s, int max);
-void printCharArr(char *s);
-void ungetch(int c);
-int getch(void);
-void test(char **p);
 set * getSetName(Status *st, char *set_names);
-void printStatus(Status *st);
 int getNum(Status *st);
 void clearStatus(Status *st, char * line);
 void numToBit(set *s, int num);
@@ -64,7 +56,6 @@ void setInitToZero();
 void advanceComma(Status *st);
 void checkRestOfLine(Status *st);
 int processSetNames(Status curr_status, char * set_names, set * sets[]);
-void printString(char *s);
 void printIllegalSequence();
 
 set A, B, C, D, E, F;
