@@ -498,7 +498,7 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 		*/
 		if(i < SET_ARR_LEN - 1 && sets[i] -> init == 0) {
 			curr_status.state = ILLEGAL;
-			printf("\n1The set %c was not initialized - i = %d\n", curr_status.setName, i);
+			printf("\nThe set %c was not initialized\n", curr_status.setName);
 			return 0;
 		}
 
