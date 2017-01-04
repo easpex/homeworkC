@@ -1,21 +1,4 @@
-#include "set.h" /* set.h has all the function definitions, "define"s, typedefs as well set objects are initialzed there */
-
-void printBitSet(char c) {
-	int pos;
-	int i;
-
-	for(i = 0; i < CHAR_ARR_LEN; i++) {
-		printf("i = %d:  ", i);
-		for(pos = 0; pos < BIT_IN_CHAR; pos++) {
-			if( ( (c) & (1 << pos)) != 0)
-				printf("1");
-			else
-				printf("0");
-		}
-		printf("\n");
-	}
-}
-
+#include "set.h" /* set.h has all the function definitions, "define"s, typedefs as well as sets are initialzed there */
 
 /**
 Before we read set name and the numbers it contains we make sure that the previous numbers are removed from the set. 
@@ -416,6 +399,9 @@ void printSet(set *p) {
 	printf("\n");
 }
 
+/**
+The function sets the init field of all sets to 0 at the start of main()
+*/
 void setInitToZero() {
 	A.init = OFF;
 	B.init = OFF;
@@ -424,6 +410,18 @@ void setInitToZero() {
 	E.init = OFF;
 	F.init = OFF;
 }
+
+/**
+The function is needed for processSetNames(). It assumes that a comma will be encountered (after possible spaces)
+and increments the char position to the next char.
+
+@param - Status *st - Status typedef which contains the current char position of user input and state field
+
+Algorithm:
+1) disregard spaces
+2) once a non-space is encountered check if it's a comma. if yes, set the state to legal otherwise it's illegal
+input and set the state to illegal
+*/
 
 void advanceComma(Status *st) {
 	while(isspace(*st -> pos)) { /* skip spaces */
@@ -440,24 +438,56 @@ void advanceComma(Status *st) {
 	}
 }
 
+/**
+The function is needed for command all commands except for READ and HALT. It makes sure that after all
+the meaningful input is received there's no other input. For example, if a user entered "print_set A  , 234"
+the function would recognize that after "print_set A" there's ", 234" which is illegal sequence.
+
+@param - Status *st - a pointer to Status typedef which contains current char position and state field.
+
+Algorithm:
+1) conservatively set the state to illegal (worst case scenario)
+2) disregard spaces
+3) if we encountered a newline that the input is legal
+4) otherwise print message that the input is illegal
+*/
+
 void checkRestOfLine(Status *st) {
 	st -> state = ILLEGAL;
 	while(isspace(*st -> pos) && *st -> pos != '\n') { /* skip spaces */
 		st -> pos++;
 	}
 
-	if(*st -> pos == '\n') {
+	if(*st -> pos == '\n') { /* if we encountered a newline and so far there was no illegal input then set the
+	state to legal */
 		st -> state = LEGAL;
 	} else {
 		printIllegalSequence();
 	}
 }
 
+/**
+The function processes sets for 3 commands: SUB/UNION/INTERSECT. It checks that the user entered exactly 3 sets,
+that the input is legal and sets the *sets[] pointer array to the relevant sets. If the input is legal it returns 1
+otherwise 0.
+
+@param - Status curr_status - Status typedef. it is not a pointer this time because we don't need to preserve any
+information for other functions (e.g. char pos, state) because we already have the command and sets (if the input is
+legal) and we just need to perform the set operation.
+@param - char * set_names - the string with the names of all the sets
+@param - set *sets[] - pointer array of set typedef. they will be set to the relevant sets so that the actual
+set operation can be perfomed in the main().
+
+@return - int - 1 if the function managed to process the sets correctly otherwise 0
+
+Algorithm:
+1) 
+*/
+
 int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 	int i;
 	/* we need to get the 3 sets which is the required number of arguments
-				that UNION needs to receive */
-
+				that SUB/UNION/INTERSECT need to receive */
 	for(i = 0; i < SET_ARR_LEN && curr_status.state == LEGAL; i++) {
 		sets[i] = getSetName(&curr_status, set_names); /* get the set */
 		if(curr_status.state != LEGAL) { /* if the state is not legal, the character that the user put 
@@ -466,16 +496,17 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 		}
 
 		/* we need to check that the first 2 sets were initialized (the last one doesn't have to be
-		initialized  */
+		initialized. If it existed from before it will be overwritten) that's why i < SET_ARR_LEN - 1.
+		*/
 		if(i < SET_ARR_LEN - 1 && sets[i] -> init == 0) {
 			curr_status.state = ILLEGAL;
 			printf("\n1The set %c was not initialized - i = %d\n", curr_status.setName, i);
 			return 0;
 		}
-		/* printf("set %d = %c\n", i, curr_status.setName); */
 
 		/* we'll use advanceComma() to make sure the set names are separated by commas 
-		and/or spaces */
+		and/or spaces. We only need to use advanceComma() for the first 2 sets, because there won't be
+		a comma after the 3rd */
 		if(i < SET_ARR_LEN - 1 && curr_status.state == LEGAL) {
 			advanceComma(&curr_status);
 		}
@@ -493,8 +524,13 @@ int processSetNames(Status curr_status, char * set_names, set * sets[]) {
 			return LEGAL;
 		}
 	}
-	return 0;
+	return 0; /* if we arrived to here then the input was illegal */
 }
+
+/**
+A small convinience function which prints "Illegal sequence" instead of having the manually printf this each time.
+This way possible spelling errors can be avoided and less characters are required to achieve the goal.
+*/
 
 void printIllegalSequence() {
 	printf("\nIllegal sequence!\n");

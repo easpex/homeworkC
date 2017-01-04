@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <stdio.h> /* need it for printing output */
+#include <stdlib.h> /* need it for exit() */
+#include <string.h> /* need it for some built-in string functions */
+#include <ctype.h> /* need it to check some primitive data types */
 
 #define CHAR_ARR_LEN 16
 #define MAX_LINE_LENGTH 1000
@@ -30,23 +30,24 @@
 #define SECOND 1
 #define LAST 2
 
-
+/* definition of set typedef */
 typedef struct set {
-	char arr[CHAR_ARR_LEN];
-	char init;
+	char arr[CHAR_ARR_LEN]; /* the char array which is bit array representation of a set of numbers */
+	char init; /* the field  tells us if a set was initialized or not */
 } set;
 
+/* definition of Status typdef. the typedef plays central role in passing states and other information from
+function to function */
 typedef struct Status {
-	int state;
-	int endOfLine;
-	int command;
-	char setName;
-	char * pos;
+	int state; /* tells us whether a state is legal or illegal */
+	int endOfLine; /* tells whether we reached end of the line */
+	int command; /* tells us the current command */
+	char setName; /* tells us the current set name */
+	char * pos; /* holds the current char position within the string so the next function can start parsing data exactly
+	where the previous function stopped */
 } Status;
 
-
-
-void printBitSet(char c);
+/* function prototypes */
 void clearBits(set *s);
 void setCommand(char *line, char *commandp[], char *_set_array, Status *st);
 int getLine(char *s, int max);
@@ -61,4 +62,4 @@ void checkRestOfLine(Status *st);
 int processSetNames(Status curr_status, char * set_names, set * sets[]);
 void printIllegalSequence();
 
-set A, B, C, D, E, F;
+set A, B, C, D, E, F; /* declare the sets globally so that both main() and set.c can use the typedef */
