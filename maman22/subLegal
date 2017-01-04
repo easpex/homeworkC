@@ -1,4 +1,6 @@
-read_set   A, 1  ,  2  ,  3  ,  56 ,  123  ,-1
+read_set   A, 1  ,  2  ,  3  ,  56 , 56, 56, 123  ,-1
 read_set B, 1,2,3,4,5,-1
-intersect_set A,B,C
+sub_set A,B,C
 print_set C
+print_set A 
+print_set B

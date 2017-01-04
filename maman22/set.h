@@ -44,6 +44,9 @@ typedef struct Status {
 	char * pos;
 } Status;
 
+
+
+void printBitSet(char c);
 void clearBits(set *s);
 void setCommand(char *line, char *commandp[], char *_set_array, Status *st);
 int getLine(char *s, int max);
