@@ -95,7 +95,7 @@ void setCommand(char *line, char *commandp[], char *_set_array, Status *st) {
 				}
 			}
 			/* if it's halt command that check if there's a space or newline after it */
-			if(row == HALT) {
+			if(row == HALT && matchCount == strlen(commandp[row])) {
 				++line; /* advance 1 char forward */
 				if(*line == ' ' || *line == '\n')
 					st -> command = HALT; /* set the command to HALT */
