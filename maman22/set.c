@@ -169,8 +169,6 @@ set *getSetName(Status *st, char *set_names) {
 				st -> pos++; /* increment the char position so the next function starts analyzing the next char */
 				return &F;
 				break;
-			default:
-				break;
 		} /* end of swtitch */
 	} /* end of for loop */
 
