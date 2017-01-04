@@ -2,16 +2,11 @@
 
 int main() {
 	/**
-	 * the array contains the names of possible commands
-	 */
-	char command_array[COMMAND_ARR_ROW_LEN][COMMAND_ARR_COL_LEN] = {"sub", "halt", "read", "union", "print", "intersect"};
-	/**
 	 * all commands except for HALT end in "_set". this is needed for command match
 	 */
 	char _set_array[] = "_set"; 
 	char set_names[] = "ABCDEF"; /* all possible set names for matches */
-	char *commandp[COMMAND_ARR_ROW_LEN]; /* the pointer array which contains the names of all commands. it is passed
-	to functions */
+	char *commandp[COMMAND_ARR_ROW_LEN]; /* the pointer array which contains the names of all commands */
 	int i;
 	int num; /* receives numbers from user input */
 	set *setp; /* receives set name and is used in PRINT and READ */
@@ -25,9 +20,12 @@ int main() {
 	setInitToZero(); /* make sure that all fields in Status typedef are set to 0 */
 
 	/* init commandp */
-	for(i = 0; i < COMMAND_ARR_ROW_LEN; i++) {
-		commandp[i] = command_array[i];
-	}
+	commandp[0] = "sub";
+	commandp[1] = "halt";
+	commandp[2] = "read";
+	commandp[3] = "union";
+	commandp[4] = "print";
+	commandp[5] = "intersect";
 	/**
 	 * the while loop gets user input line by line. Everything pretty much happens inside it. The loop will stop under
 	 * 3 conditions: user's command was HALT, user input exceeded max allowed input length or we reached end of file 
