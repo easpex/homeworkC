@@ -61,5 +61,6 @@ void advanceComma(Status *st);
 void checkRestOfLine(Status *st);
 int processSetNames(Status curr_status, char * set_names, set * sets[]);
 void printIllegalSequence();
+int isEmpty(set *s);
 
 set A, B, C, D, E, F; /* declare the sets globally so that both main() and set.c can use the typedef */

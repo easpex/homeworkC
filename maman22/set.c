@@ -533,3 +533,20 @@ This way possible spelling errors can be avoided and less characters are require
 void printIllegalSequence() {
 	printf("\nIllegal sequence!\n");
 }
+/**
+ * The function returns true of false if a set is an empty set. 
+ * @param - set *s - a set pointer
+ * @return - int - 1 if the set is empty else 0
+ * 
+ * Algorithm:
+ * 1) loop through s -> arr and increment sum as the sum of all bytes. if in the end the sum is 0 this means
+ * the set is empty
+ */
+int isEmpty(set *s) {
+	int i;
+	int sum = 0; /* is incremented by the value of each byte in the char array */
+	for(i = 0; i < CHAR_ARR_LEN; i++) {
+		sum += s -> arr[i];
+	}
+	return (!sum) ? 1 : 0; /* if the sum is 0 return 1 else 0 */
+}

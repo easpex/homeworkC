@@ -74,6 +74,8 @@ int main() {
 					 	if(setp -> init == OFF) {  /* user input may be perfectly legal but
 					 	is the set was never read and initialized we can't print it */
 							printf("\nThe set %c was not initialized\n", curr_status.setName);					
+						} else if(isEmpty(setp)){ /* check is the set is empty */
+							printf("\nEmpty set\n"); 
 						} else {
 							printSet(setp);
 						}
