@@ -3,7 +3,7 @@
 #define UNINITIALIZED -2
 #define END_OF_INPUT -1
 
-int min = UNINITIALIZED;
+
 int min_call(int x, ...);
 
 int main() {
@@ -11,7 +11,7 @@ int main() {
 	printf("min = %d\n",min_call(-1));
 	printf("min = %d\n",min_call(100, -1));
 	printf("min = %d\n",min_call(54, 23, 66, 78, 90, -1));
-	printf("min = %d\n",min_call(9,8,87,1,-1));
+	printf("min = %d\n",min_call(9,8,87,2,-1));
 	printf("min = %d\n",min_call(-1));
 
 	return 0;
@@ -22,6 +22,7 @@ int min_call(int x, ...) {
 
 	int curr;
 	int next = UNINITIALIZED;
+	static int min = UNINITIALIZED;
 
 	va_start(p, x);
 	curr = x;
